@@ -15,6 +15,7 @@ import com.ektasingh.portfolio.profile.exception.ProfileNotFoundException;
 import com.ektasingh.portfolio.project.exception.ProjectNotFoundException;
 import com.ektasingh.portfolio.publication.exception.PublicationNotFoundException;
 import com.ektasingh.portfolio.skill.exception.SkillNotFoundException;
+import com.ektasingh.portfolio.technology.exception.TechnologyNotFoundException;
 import com.ektasingh.portfolio.education.exception.EducationNotFoundException;
 import com.ektasingh.portfolio.experience.exception.ExperienceNotFoundException;
 
@@ -204,6 +205,23 @@ public class GlobalExceptionHandler {
         @ExceptionHandler(AchievementNotFoundException.class)
         public ResponseEntity<ErrorResponse> handleAchievementNotFoundException(
                 AchievementNotFoundException ex,
+                HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse();
+
+        error.setTimestamp(LocalDateTime.now());
+        error.setStatus(HttpStatus.NOT_FOUND.value());
+        error.setError(HttpStatus.NOT_FOUND.getReasonPhrase());
+        error.setMessage(ex.getMessage());
+        error.setPath(request.getRequestURI());
+        error.setValidationErrors(null);
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+
+        @ExceptionHandler(TechnologyNotFoundException.class)
+        public ResponseEntity<ErrorResponse> handleTechnologyNotFoundException(
+                TechnologyNotFoundException ex,
                 HttpServletRequest request) {
 
         ErrorResponse error = new ErrorResponse();
