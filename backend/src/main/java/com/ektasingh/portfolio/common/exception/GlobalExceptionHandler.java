@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.ektasingh.portfolio.achievement.exception.AchievementNotFoundException;
 import com.ektasingh.portfolio.certificate.exception.CertificationNotFoundException;
 import com.ektasingh.portfolio.contact.exception.ContactNotFoundException;
 import com.ektasingh.portfolio.profile.exception.ProfileNotFoundException;
@@ -186,6 +187,23 @@ public class GlobalExceptionHandler {
         @ExceptionHandler(CertificationNotFoundException.class)
         public ResponseEntity<ErrorResponse> handleCertificationNotFoundException(
                 CertificationNotFoundException ex,
+                HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse();
+
+        error.setTimestamp(LocalDateTime.now());
+        error.setStatus(HttpStatus.NOT_FOUND.value());
+        error.setError(HttpStatus.NOT_FOUND.getReasonPhrase());
+        error.setMessage(ex.getMessage());
+        error.setPath(request.getRequestURI());
+        error.setValidationErrors(null);
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+
+        @ExceptionHandler(AchievementNotFoundException.class)
+        public ResponseEntity<ErrorResponse> handleAchievementNotFoundException(
+                AchievementNotFoundException ex,
                 HttpServletRequest request) {
 
         ErrorResponse error = new ErrorResponse();
