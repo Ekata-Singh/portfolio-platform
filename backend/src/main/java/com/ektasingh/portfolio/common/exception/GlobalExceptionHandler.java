@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.ektasingh.portfolio.contact.exception.ContactNotFoundException;
 import com.ektasingh.portfolio.profile.exception.ProfileNotFoundException;
 import com.ektasingh.portfolio.education.exception.EducationNotFoundException;
+import com.ektasingh.portfolio.experience.exception.ExperienceNotFoundException;
+
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -95,6 +97,23 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EducationNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleEducationNotFoundException(
             EducationNotFoundException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse errorResponse = new ErrorResponse();
+
+        errorResponse.setTimestamp(LocalDateTime.now());
+        errorResponse.setStatus(HttpStatus.NOT_FOUND.value());
+        errorResponse.setError(HttpStatus.NOT_FOUND.getReasonPhrase());
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(ExperienceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleExperienceNotFoundException(
+            ExperienceNotFoundException ex,
             HttpServletRequest request) {
 
         ErrorResponse errorResponse = new ErrorResponse();
