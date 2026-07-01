@@ -1,10 +1,13 @@
 package com.ektasingh.portfolio.contact.controller;
 
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import com.ektasingh.portfolio.contact.dto.request.ContactCreateRequest;
 import com.ektasingh.portfolio.contact.dto.response.ContactResponse;
 import com.ektasingh.portfolio.contact.service.ContactService;
 import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,5 +55,14 @@ public class ContactController {
     public void deleteContact(@PathVariable Long id) {
 
         contactService.deleteContact(id);
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<PageResponse<ContactResponse>> getContacts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseEntity.ok(
+                contactService.getContacts(page, size));
     }
 }

@@ -7,7 +7,12 @@ import com.ektasingh.portfolio.achievement.exception.AchievementNotFoundExceptio
 import com.ektasingh.portfolio.achievement.mapper.AchievementMapper;
 import com.ektasingh.portfolio.achievement.repository.AchievementRepository;
 import com.ektasingh.portfolio.achievement.service.AchievementService;
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,6 +50,40 @@ public class AchievementServiceImpl implements AchievementService {
                 .stream()
                 .map(mapper::toResponse)
                 .toList();
+    }
+
+    @Override
+public PageResponse<AchievementResponse> getAchievements(int page, int size) {
+
+    Pageable pageable = PageRequest.of(page, size);
+
+    Page<Achievement> achievementPage =
+            repository.findAllByOrderByDisplayOrderAsc(pageable);
+
+    PageResponse<AchievementResponse> response = new PageResponse<>();
+
+        response.setContent(
+                achievementPage.getContent()
+                        .stream()
+                        .map(mapper::toResponse)
+                        .toList()
+        );
+
+        response.setPage(achievementPage.getNumber());
+
+        response.setSize(achievementPage.getSize());
+
+        response.setTotalElements(achievementPage.getTotalElements());
+
+        response.setTotalPages(achievementPage.getTotalPages());
+
+        response.setFirst(achievementPage.isFirst());
+
+        response.setLast(achievementPage.isLast());
+
+        response.setEmpty(achievementPage.isEmpty());
+
+        return response;
     }
 
     @Override

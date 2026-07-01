@@ -1,11 +1,13 @@
 package com.ektasingh.portfolio.skill.controller;
 
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import com.ektasingh.portfolio.skill.dto.request.SkillCreateRequest;
 import com.ektasingh.portfolio.skill.dto.response.SkillResponse;
 import com.ektasingh.portfolio.skill.service.SkillService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,5 +52,14 @@ public class SkillController {
     public void deleteSkill(@PathVariable Long id) {
 
         service.deleteSkill(id);
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<PageResponse<SkillResponse>> getSkills(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseEntity.ok(
+                service.getSkills(page, size));
     }
 }

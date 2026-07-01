@@ -2,6 +2,7 @@ package com.ektasingh.portfolio.achievement.service;
 
 import com.ektasingh.portfolio.achievement.dto.request.AchievementCreateRequest;
 import com.ektasingh.portfolio.achievement.dto.response.AchievementResponse;
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ public interface AchievementService {
     AchievementResponse getAchievementById(Long id);
 
     List<AchievementResponse> getAllAchievements();
+
+    PageResponse<AchievementResponse> getAchievements(int page, int size);
 
     AchievementResponse updateAchievement(
             Long id,

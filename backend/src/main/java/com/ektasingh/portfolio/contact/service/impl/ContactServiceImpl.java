@@ -1,5 +1,6 @@
 package com.ektasingh.portfolio.contact.service.impl;
 
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import com.ektasingh.portfolio.contact.dto.request.ContactCreateRequest;
 import com.ektasingh.portfolio.contact.dto.response.ContactResponse;
 import com.ektasingh.portfolio.contact.entity.Contact;
@@ -7,6 +8,9 @@ import com.ektasingh.portfolio.contact.exception.ContactNotFoundException;
 import com.ektasingh.portfolio.contact.mapper.ContactMapper;
 import com.ektasingh.portfolio.contact.repository.ContactRepository;
 import com.ektasingh.portfolio.contact.service.ContactService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -79,5 +83,39 @@ public class ContactServiceImpl implements ContactService {
                 .orElseThrow(() -> new ContactNotFoundException(id));
 
         repository.delete(contact);
+    }
+
+    @Override
+    public PageResponse<ContactResponse> getContacts(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Contact> contactPage =
+                repository.findAllByOrderByIdAsc(pageable);
+
+        PageResponse<ContactResponse> response = new PageResponse<>();
+
+        response.setContent(
+                contactPage.getContent()
+                        .stream()
+                        .map(mapper::toResponse)
+                        .toList()
+        );
+
+        response.setPage(contactPage.getNumber());
+
+        response.setSize(contactPage.getSize());
+
+        response.setTotalElements(contactPage.getTotalElements());
+
+        response.setTotalPages(contactPage.getTotalPages());
+
+        response.setFirst(contactPage.isFirst());
+
+        response.setLast(contactPage.isLast());
+
+        response.setEmpty(contactPage.isEmpty());
+
+        return response;
     }
 }

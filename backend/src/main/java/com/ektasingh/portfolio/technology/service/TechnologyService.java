@@ -2,7 +2,7 @@ package com.ektasingh.portfolio.technology.service;
 
 import com.ektasingh.portfolio.technology.dto.request.TechnologyCreateRequest;
 import com.ektasingh.portfolio.technology.dto.response.TechnologyResponse;
-
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import java.util.List;
 
 public interface TechnologyService {
@@ -12,6 +12,8 @@ public interface TechnologyService {
     TechnologyResponse getTechnologyById(Long id);
 
     List<TechnologyResponse> getAllTechnologies();
+
+    PageResponse<TechnologyResponse> getTechnologies(int page, int size);
 
     TechnologyResponse updateTechnology(
             Long id,

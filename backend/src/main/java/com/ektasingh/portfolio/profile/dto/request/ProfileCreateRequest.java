@@ -35,6 +35,9 @@ public class ProfileCreateRequest {
     @Size(max = 255)
     private String githubUrl;
 
+    @Size(max = 500)
+    private String profileImageUrl;
+
     @Size(max = 255)
     private String linkedinUrl;
 

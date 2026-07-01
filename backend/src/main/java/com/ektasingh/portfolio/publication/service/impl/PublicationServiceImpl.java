@@ -1,5 +1,6 @@
 package com.ektasingh.portfolio.publication.service.impl;
 
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import com.ektasingh.portfolio.publication.dto.request.PublicationCreateRequest;
 import com.ektasingh.portfolio.publication.dto.response.PublicationResponse;
 import com.ektasingh.portfolio.publication.entity.Publication;
@@ -7,7 +8,11 @@ import com.ektasingh.portfolio.publication.exception.PublicationNotFoundExceptio
 import com.ektasingh.portfolio.publication.mapper.PublicationMapper;
 import com.ektasingh.portfolio.publication.repository.PublicationRepository;
 import com.ektasingh.portfolio.publication.service.PublicationService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,6 +50,40 @@ public class PublicationServiceImpl implements PublicationService {
                 .stream()
                 .map(mapper::toResponse)
                 .toList();
+    }
+
+    @Override
+public PageResponse<PublicationResponse> getPublications(int page, int size) {
+
+    Pageable pageable = PageRequest.of(page, size);
+
+    Page<Publication> publicationPage =
+            repository.findAllByOrderByDisplayOrderAsc(pageable);
+
+    PageResponse<PublicationResponse> response = new PageResponse<>();
+
+        response.setContent(
+                publicationPage.getContent()
+                        .stream()
+                        .map(mapper::toResponse)
+                        .toList()
+        );
+
+        response.setPage(publicationPage.getNumber());
+
+        response.setSize(publicationPage.getSize());
+
+        response.setTotalElements(publicationPage.getTotalElements());
+
+        response.setTotalPages(publicationPage.getTotalPages());
+
+        response.setFirst(publicationPage.isFirst());
+
+        response.setLast(publicationPage.isLast());
+
+        response.setEmpty(publicationPage.isEmpty());
+
+        return response;
     }
 
     @Override

@@ -1,11 +1,13 @@
 package com.ektasingh.portfolio.education.controller;
 
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import com.ektasingh.portfolio.education.dto.request.EducationCreateRequest;
 import com.ektasingh.portfolio.education.dto.response.EducationResponse;
 import com.ektasingh.portfolio.education.service.EducationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,5 +54,19 @@ public class EducationController {
             @PathVariable Long id) {
 
         educationService.deleteEducation(id);
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<PageResponse<EducationResponse>> getEducations(
+
+            @RequestParam(defaultValue = "0") int page,
+
+            @RequestParam(defaultValue = "6") int size) {
+
+        return ResponseEntity.ok(
+
+                educationService.getEducations(page, size)
+
+        );
     }
 }

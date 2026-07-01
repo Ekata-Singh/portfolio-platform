@@ -3,6 +3,8 @@ package com.ektasingh.portfolio.certificate.controller;
 import com.ektasingh.portfolio.certificate.dto.request.CertificationCreateRequest;
 import com.ektasingh.portfolio.certificate.dto.response.CertificationResponse;
 import com.ektasingh.portfolio.certificate.service.CertificationService;
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -59,5 +61,16 @@ public class CertificationController {
         certificationService.deleteCertification(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<PageResponse<CertificationResponse>> getCertifications(
+
+            @RequestParam(defaultValue = "0") int page,
+
+            @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseEntity.ok(
+                certificationService.getCertifications(page, size));
     }
 }

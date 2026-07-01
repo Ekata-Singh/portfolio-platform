@@ -34,6 +34,9 @@ public class Profile {
     @Column(name = "github_url")
     private String githubUrl;
 
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
     @Column(name = "linkedin_url")
     private String linkedinUrl;
 

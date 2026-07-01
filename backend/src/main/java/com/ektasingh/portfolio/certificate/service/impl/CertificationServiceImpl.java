@@ -7,7 +7,12 @@ import com.ektasingh.portfolio.certificate.exception.CertificationNotFoundExcept
 import com.ektasingh.portfolio.certificate.mapper.CertificationMapper;
 import com.ektasingh.portfolio.certificate.repository.CertificationRepository;
 import com.ektasingh.portfolio.certificate.service.CertificationService;
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,9 +70,43 @@ public class CertificationServiceImpl implements CertificationService {
     @Override
     public void deleteCertification(Long id) {
 
-        Certification certification = repository.findById(id)
-                .orElseThrow(() -> new CertificationNotFoundException(id));
+            Certification certification = repository.findById(id)
+                    .orElseThrow(() -> new CertificationNotFoundException(id));
 
-        repository.delete(certification);
+            repository.delete(certification);
+        }
+
+        @Override
+    public PageResponse<CertificationResponse> getCertifications(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Certification> certificationPage =
+                repository.findAllByOrderByDisplayOrderAsc(pageable);
+
+        PageResponse<CertificationResponse> response = new PageResponse<>();
+
+        response.setContent(
+                certificationPage.getContent()
+                        .stream()
+                        .map(mapper::toResponse)
+                        .toList()
+        );
+
+        response.setPage(certificationPage.getNumber());
+
+        response.setSize(certificationPage.getSize());
+
+        response.setTotalElements(certificationPage.getTotalElements());
+
+        response.setTotalPages(certificationPage.getTotalPages());
+
+        response.setFirst(certificationPage.isFirst());
+
+        response.setLast(certificationPage.isLast());
+
+        response.setEmpty(certificationPage.isEmpty());
+
+        return response;
     }
 }

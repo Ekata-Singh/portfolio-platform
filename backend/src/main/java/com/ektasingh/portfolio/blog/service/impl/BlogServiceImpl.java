@@ -7,6 +7,11 @@ import com.ektasingh.portfolio.blog.exception.BlogNotFoundException;
 import com.ektasingh.portfolio.blog.mapper.BlogMapper;
 import com.ektasingh.portfolio.blog.repository.BlogRepository;
 import com.ektasingh.portfolio.blog.service.BlogService;
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -68,5 +73,39 @@ public class BlogServiceImpl implements BlogService {
                 .orElseThrow(() -> new BlogNotFoundException(id));
 
         repository.delete(blog);
+    }
+
+    @Override
+    public PageResponse<BlogResponse> getBlogs(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Blog> blogPage =
+                repository.findAllByOrderByDisplayOrderAsc(pageable);
+
+        PageResponse<BlogResponse> response = new PageResponse<>();
+
+        response.setContent(
+                blogPage.getContent()
+                        .stream()
+                        .map(mapper::toResponse)
+                        .toList()
+        );
+
+        response.setPage(blogPage.getNumber());
+
+        response.setSize(blogPage.getSize());
+
+        response.setTotalElements(blogPage.getTotalElements());
+
+        response.setTotalPages(blogPage.getTotalPages());
+
+        response.setFirst(blogPage.isFirst());
+
+        response.setLast(blogPage.isLast());
+
+        response.setEmpty(blogPage.isEmpty());
+
+        return response;
     }
 }

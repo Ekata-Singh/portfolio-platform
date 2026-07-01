@@ -1,5 +1,6 @@
 package com.ektasingh.portfolio.technology.service.impl;
 
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import com.ektasingh.portfolio.technology.dto.request.TechnologyCreateRequest;
 import com.ektasingh.portfolio.technology.dto.response.TechnologyResponse;
 import com.ektasingh.portfolio.technology.entity.Technology;
@@ -7,6 +8,9 @@ import com.ektasingh.portfolio.technology.exception.TechnologyNotFoundException;
 import com.ektasingh.portfolio.technology.mapper.TechnologyMapper;
 import com.ektasingh.portfolio.technology.repository.TechnologyRepository;
 import com.ektasingh.portfolio.technology.service.TechnologyService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -69,5 +73,39 @@ public class TechnologyServiceImpl implements TechnologyService {
                 .orElseThrow(() -> new TechnologyNotFoundException(id));
 
         repository.delete(technology);
+    }
+
+    @Override
+    public PageResponse<TechnologyResponse> getTechnologies(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Technology> technologyPage =
+                repository.findAllByOrderByDisplayOrderAsc(pageable);
+
+        PageResponse<TechnologyResponse> response = new PageResponse<>();
+
+        response.setContent(
+                technologyPage.getContent()
+                        .stream()
+                        .map(mapper::toResponse)
+                        .toList()
+        );
+
+        response.setPage(technologyPage.getNumber());
+
+        response.setSize(technologyPage.getSize());
+
+        response.setTotalElements(technologyPage.getTotalElements());
+
+        response.setTotalPages(technologyPage.getTotalPages());
+
+        response.setFirst(technologyPage.isFirst());
+
+        response.setLast(technologyPage.isLast());
+
+        response.setEmpty(technologyPage.isEmpty());
+
+        return response;
     }
 }

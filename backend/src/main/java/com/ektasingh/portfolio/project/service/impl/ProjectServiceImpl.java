@@ -1,5 +1,6 @@
 package com.ektasingh.portfolio.project.service.impl;
 
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import com.ektasingh.portfolio.project.dto.request.ProjectCreateRequest;
 import com.ektasingh.portfolio.project.dto.response.ProjectResponse;
 import com.ektasingh.portfolio.project.entity.Project;
@@ -8,6 +9,9 @@ import com.ektasingh.portfolio.project.mapper.ProjectMapper;
 import com.ektasingh.portfolio.project.repository.ProjectRepository;
 import com.ektasingh.portfolio.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,6 +49,39 @@ public class ProjectServiceImpl implements ProjectService {
                 .stream()
                 .map(mapper::toResponse)
                 .toList();
+    }
+    
+    @Override
+    public PageResponse<ProjectResponse> getProjects(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Project> projectPage =
+                repository.findAllByOrderByDisplayOrderAsc(pageable);
+
+        PageResponse<ProjectResponse> response = new PageResponse<>();
+
+        response.setContent(
+                projectPage.getContent()
+                        .stream()
+                        .map(mapper::toResponse)
+                        .toList());
+
+        response.setPage(projectPage.getNumber());
+
+        response.setSize(projectPage.getSize());
+
+        response.setTotalElements(projectPage.getTotalElements());
+
+        response.setTotalPages(projectPage.getTotalPages());
+
+        response.setFirst(projectPage.isFirst());
+
+        response.setLast(projectPage.isLast());
+
+        response.setEmpty(projectPage.isEmpty());
+
+        return response;
     }
 
     @Override

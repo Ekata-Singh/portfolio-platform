@@ -3,6 +3,8 @@ package com.ektasingh.portfolio.blog.controller;
 import com.ektasingh.portfolio.blog.dto.request.BlogCreateRequest;
 import com.ektasingh.portfolio.blog.dto.response.BlogResponse;
 import com.ektasingh.portfolio.blog.service.BlogService;
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -55,5 +57,16 @@ public class BlogController {
         blogService.deleteBlog(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<PageResponse<BlogResponse>> getBlogs(
+
+            @RequestParam(defaultValue = "0") int page,
+
+            @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseEntity.ok(
+                blogService.getBlogs(page, size));
     }
 }

@@ -2,6 +2,7 @@ package com.ektasingh.portfolio.publication.service;
 
 import com.ektasingh.portfolio.publication.dto.request.PublicationCreateRequest;
 import com.ektasingh.portfolio.publication.dto.response.PublicationResponse;
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 
 import java.util.List;
 
@@ -13,8 +14,11 @@ public interface PublicationService {
 
     List<PublicationResponse> getAllPublications();
 
+    PageResponse<PublicationResponse> getPublications(int page, int size);
+
     PublicationResponse updatePublication(Long id,
                                           PublicationCreateRequest request);
 
     void deletePublication(Long id);
+
 }

@@ -19,6 +19,7 @@ public class ProfileMapper {
         profile.setPhone(request.getPhone());
         profile.setLocation(request.getLocation());
         profile.setGithubUrl(request.getGithubUrl());
+        profile.setProfileImageUrl(request.getProfileImageUrl());
         profile.setLinkedinUrl(request.getLinkedinUrl());
         profile.setResumeUrl(request.getResumeUrl());
 
@@ -37,6 +38,7 @@ public class ProfileMapper {
         response.setPhone(profile.getPhone());
         response.setLocation(profile.getLocation());
         response.setGithubUrl(profile.getGithubUrl());
+        response.setProfileImageUrl(profile.getProfileImageUrl());
         response.setLinkedinUrl(profile.getLinkedinUrl());
         response.setResumeUrl(profile.getResumeUrl());
         response.setCreatedAt(profile.getCreatedAt());

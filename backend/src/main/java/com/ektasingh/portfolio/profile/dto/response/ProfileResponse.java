@@ -25,6 +25,8 @@ public class ProfileResponse {
 
     private String githubUrl;
 
+    private String profileImageUrl;
+
     private String linkedinUrl;
 
     private String resumeUrl;

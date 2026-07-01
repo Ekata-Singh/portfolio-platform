@@ -1,5 +1,6 @@
 package com.ektasingh.portfolio.technology.controller;
 
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import com.ektasingh.portfolio.technology.dto.request.TechnologyCreateRequest;
 import com.ektasingh.portfolio.technology.dto.response.TechnologyResponse;
 import com.ektasingh.portfolio.technology.service.TechnologyService;
@@ -59,5 +60,14 @@ public class TechnologyController {
         technologyService.deleteTechnology(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<PageResponse<TechnologyResponse>> getTechnologies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseEntity.ok(
+                technologyService.getTechnologies(page, size));
     }
 }

@@ -1,5 +1,6 @@
 package com.ektasingh.portfolio.publication.controller;
 
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import com.ektasingh.portfolio.publication.dto.request.PublicationCreateRequest;
 import com.ektasingh.portfolio.publication.dto.response.PublicationResponse;
 import com.ektasingh.portfolio.publication.service.PublicationService;
@@ -62,4 +63,15 @@ public class PublicationController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/page")
+        public ResponseEntity<PageResponse<PublicationResponse>> getPublications(
+
+                @RequestParam(defaultValue = "0") int page,
+
+                @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseEntity.ok(
+                publicationService.getPublications(page, size));
+        }
 }

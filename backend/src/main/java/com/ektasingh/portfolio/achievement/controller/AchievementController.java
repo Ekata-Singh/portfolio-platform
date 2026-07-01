@@ -3,6 +3,7 @@ package com.ektasingh.portfolio.achievement.controller;
 import com.ektasingh.portfolio.achievement.dto.request.AchievementCreateRequest;
 import com.ektasingh.portfolio.achievement.dto.response.AchievementResponse;
 import com.ektasingh.portfolio.achievement.service.AchievementService;
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -59,5 +60,16 @@ public class AchievementController {
         achievementService.deleteAchievement(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<PageResponse<AchievementResponse>> getAchievements(
+
+            @RequestParam(defaultValue = "0") int page,
+
+            @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseEntity.ok(
+                achievementService.getAchievements(page, size));
     }
 }

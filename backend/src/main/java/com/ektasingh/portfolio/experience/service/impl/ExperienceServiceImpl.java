@@ -1,5 +1,6 @@
 package com.ektasingh.portfolio.experience.service.impl;
 
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import com.ektasingh.portfolio.experience.dto.request.ExperienceCreateRequest;
 import com.ektasingh.portfolio.experience.dto.response.ExperienceResponse;
 import com.ektasingh.portfolio.experience.entity.Experience;
@@ -7,13 +8,19 @@ import com.ektasingh.portfolio.experience.exception.ExperienceNotFoundException;
 import com.ektasingh.portfolio.experience.mapper.ExperienceMapper;
 import com.ektasingh.portfolio.experience.repository.ExperienceRepository;
 import com.ektasingh.portfolio.experience.service.ExperienceService;
+
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Builder
 public class ExperienceServiceImpl implements ExperienceService {
 
     private final ExperienceRepository experienceRepository;
@@ -85,4 +92,45 @@ public class ExperienceServiceImpl implements ExperienceService {
 
         experienceRepository.delete(experience);
     }
+
+    @Override
+        public PageResponse<ExperienceResponse> getExperiences(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Experience> experiencePage =
+                experienceRepository.findAll(pageable);
+
+        PageResponse<ExperienceResponse> response =
+                new PageResponse<>();
+
+        response.setContent(
+                experiencePage.getContent()
+                        .stream()
+                        .map(ExperienceMapper::toResponse)
+                        .toList());
+
+        response.setPage(
+                experiencePage.getNumber());
+
+        response.setSize(
+                experiencePage.getSize());
+
+        response.setTotalElements(
+                experiencePage.getTotalElements());
+
+        response.setTotalPages(
+                experiencePage.getTotalPages());
+
+        response.setFirst(
+                experiencePage.isFirst());
+
+        response.setLast(
+                experiencePage.isLast());
+
+        response.setEmpty(
+                experiencePage.isEmpty());
+
+        return response;
+        }
 }

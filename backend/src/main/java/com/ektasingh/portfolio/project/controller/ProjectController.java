@@ -1,10 +1,12 @@
 package com.ektasingh.portfolio.project.controller;
 
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import com.ektasingh.portfolio.project.dto.request.ProjectCreateRequest;
 import com.ektasingh.portfolio.project.dto.response.ProjectResponse;
 import com.ektasingh.portfolio.project.service.ProjectService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,5 +56,24 @@ public class ProjectController {
             @PathVariable Long id) {
 
         projectService.deleteProject(id);
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<PageResponse<ProjectResponse>> getProjects(
+
+            @RequestParam(defaultValue = "0") int page,
+
+            @RequestParam(defaultValue = "6") int size) {
+
+        return ResponseEntity.ok(
+
+                projectService.getProjects(page, size)
+
+        );
+    }
+
+    @GetMapping("/ping")
+    public String ping() {
+        return "Project Controller Working";
     }
 }
