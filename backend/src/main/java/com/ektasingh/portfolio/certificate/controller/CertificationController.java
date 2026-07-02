@@ -64,13 +64,25 @@ public class CertificationController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<PageResponse<CertificationResponse>> getCertifications(
+        public ResponseEntity<PageResponse<CertificationResponse>> getCertifications(
 
-            @RequestParam(defaultValue = "0") int page,
+                @RequestParam(defaultValue = "0") int page,
 
-            @RequestParam(defaultValue = "10") int size) {
+                @RequestParam(defaultValue = "10") int size,
+
+                @RequestParam(required = false) String query,
+
+                @RequestParam(defaultValue = "displayOrder") String sortBy,
+
+                @RequestParam(defaultValue = "asc") String direction) {
 
         return ResponseEntity.ok(
-                certificationService.getCertifications(page, size));
-    }
+                certificationService.getCertifications(
+                        page,
+                        size,
+                        query,
+                        sortBy,
+                        direction
+                ));
+        }
 }

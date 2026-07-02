@@ -14,7 +14,13 @@ public interface PublicationService {
 
     List<PublicationResponse> getAllPublications();
 
-    PageResponse<PublicationResponse> getPublications(int page, int size);
+    PageResponse<PublicationResponse> getPublications(
+            int page,
+            int size,
+            String query,
+            String sortBy,
+            String direction
+    );
 
     PublicationResponse updatePublication(Long id,
                                           PublicationCreateRequest request);

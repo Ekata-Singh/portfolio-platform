@@ -62,11 +62,17 @@ public class BlogController {
     @GetMapping("/page")
     public ResponseEntity<PageResponse<BlogResponse>> getBlogs(
 
+            @RequestParam(defaultValue = "") String query,
+
             @RequestParam(defaultValue = "0") int page,
 
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+
+            @RequestParam(defaultValue = "displayOrder") String sortBy,
+
+            @RequestParam(defaultValue = "asc") String direction) {
 
         return ResponseEntity.ok(
-                blogService.getBlogs(page, size));
+                blogService.getBlogs(query, page, size, sortBy, direction));
     }
 }

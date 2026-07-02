@@ -59,10 +59,24 @@ public class ContactController {
 
     @GetMapping("/page")
     public ResponseEntity<PageResponse<ContactResponse>> getContacts(
+
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+
+            @RequestParam(defaultValue = "10") int size,
+
+            @RequestParam(required = false) String query,
+
+            @RequestParam(defaultValue = "id") String sortBy,
+
+            @RequestParam(defaultValue = "asc") String direction) {
 
         return ResponseEntity.ok(
-                contactService.getContacts(page, size));
+                contactService.getContacts(
+                        page,
+                        size,
+                        query,
+                        sortBy,
+                        direction
+                ));
     }
 }

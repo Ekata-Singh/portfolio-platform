@@ -14,7 +14,13 @@ public interface CertificationService {
 
     List<CertificationResponse> getAllCertifications();
 
-    PageResponse<CertificationResponse> getCertifications(int page, int size);
+    PageResponse<CertificationResponse> getCertifications(
+        int page,
+        int size,
+        String query,
+        String sortBy,
+        String direction
+);
 
     CertificationResponse updateCertification(
             Long id,

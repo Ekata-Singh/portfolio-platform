@@ -14,7 +14,13 @@ public interface AchievementService {
 
     List<AchievementResponse> getAllAchievements();
 
-    PageResponse<AchievementResponse> getAchievements(int page, int size);
+    PageResponse<AchievementResponse> getAchievements(
+        int page,
+        int size,
+        String query,
+        String sortBy,
+        String direction
+);
 
     AchievementResponse updateAchievement(
             Long id,

@@ -11,7 +11,7 @@ import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -53,14 +53,28 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     @Override
-public PageResponse<AchievementResponse> getAchievements(int page, int size) {
+    public PageResponse<AchievementResponse> getAchievements(
+            int page,
+            int size,
+            String query,
+            String sortBy,
+            String direction) {
 
-    Pageable pageable = PageRequest.of(page, size);
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
 
-    Page<Achievement> achievementPage =
-            repository.findAllByOrderByDisplayOrderAsc(pageable);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-    PageResponse<AchievementResponse> response = new PageResponse<>();
+        Page<Achievement> achievementPage;
+
+        if (query != null && !query.isBlank()) {
+            achievementPage = repository.searchAchievements(query, pageable);
+        } else {
+            achievementPage = repository.findAll(pageable);
+        }
+
+        PageResponse<AchievementResponse> response = new PageResponse<>();
 
         response.setContent(
                 achievementPage.getContent()
@@ -70,21 +84,16 @@ public PageResponse<AchievementResponse> getAchievements(int page, int size) {
         );
 
         response.setPage(achievementPage.getNumber());
-
         response.setSize(achievementPage.getSize());
-
         response.setTotalElements(achievementPage.getTotalElements());
-
         response.setTotalPages(achievementPage.getTotalPages());
-
         response.setFirst(achievementPage.isFirst());
-
         response.setLast(achievementPage.isLast());
-
         response.setEmpty(achievementPage.isEmpty());
 
         return response;
     }
+
 
     @Override
     public AchievementResponse updateAchievement(

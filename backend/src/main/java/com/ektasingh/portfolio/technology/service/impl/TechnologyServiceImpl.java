@@ -13,7 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Sort;
 import java.util.List;
 
 @Service
@@ -76,12 +76,26 @@ public class TechnologyServiceImpl implements TechnologyService {
     }
 
     @Override
-    public PageResponse<TechnologyResponse> getTechnologies(int page, int size) {
+    public PageResponse<TechnologyResponse> getTechnologies(
+            int page,
+            int size,
+            String query,
+            String sortBy,
+            String direction) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
 
-        Page<Technology> technologyPage =
-                repository.findAllByOrderByDisplayOrderAsc(pageable);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Technology> technologyPage;
+
+        if (query == null || query.isBlank()) {
+            technologyPage = repository.findAll(pageable);
+        } else {
+            technologyPage = repository.searchTechnologiesPage(query, pageable);
+        }
 
         PageResponse<TechnologyResponse> response = new PageResponse<>();
 
@@ -89,23 +103,28 @@ public class TechnologyServiceImpl implements TechnologyService {
                 technologyPage.getContent()
                         .stream()
                         .map(mapper::toResponse)
-                        .toList()
-        );
+                        .toList());
 
         response.setPage(technologyPage.getNumber());
 
         response.setSize(technologyPage.getSize());
 
-        response.setTotalElements(technologyPage.getTotalElements());
+        response.setTotalElements(
+                technologyPage.getTotalElements());
 
-        response.setTotalPages(technologyPage.getTotalPages());
+        response.setTotalPages(
+                technologyPage.getTotalPages());
 
-        response.setFirst(technologyPage.isFirst());
+        response.setFirst(
+                technologyPage.isFirst());
 
-        response.setLast(technologyPage.isLast());
+        response.setLast(
+                technologyPage.isLast());
 
-        response.setEmpty(technologyPage.isEmpty());
+        response.setEmpty(
+                technologyPage.isEmpty());
 
         return response;
     }
+
 }

@@ -61,13 +61,24 @@ public class ProjectController {
     @GetMapping("/page")
     public ResponseEntity<PageResponse<ProjectResponse>> getProjects(
 
+            @RequestParam(required = false) String query,
+
             @RequestParam(defaultValue = "0") int page,
 
-            @RequestParam(defaultValue = "6") int size) {
+            @RequestParam(defaultValue = "6") int size,
+
+            @RequestParam(defaultValue = "displayOrder") String sortBy,
+
+            @RequestParam(defaultValue = "asc") String direction) {
 
         return ResponseEntity.ok(
 
-                projectService.getProjects(page, size)
+                projectService.getProjects(
+                        query,
+                        page,
+                        size,
+                        sortBy,
+                        direction)
 
         );
     }

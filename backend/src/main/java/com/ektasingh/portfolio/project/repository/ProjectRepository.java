@@ -6,20 +6,34 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
+import java.util.List;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query("""
         SELECT p
         FROM Project p
         WHERE
-            LOWER(p.projectName) LIKE LOWER(CONCAT('%', :query, '%'))
+            (:query IS NULL
+            OR TRIM(:query) = ''
+            OR LOWER(p.projectName) LIKE LOWER(CONCAT('%', :query, '%'))
             OR LOWER(p.description) LIKE LOWER(CONCAT('%', :query, '%'))
-            OR LOWER(p.technologies) LIKE LOWER(CONCAT('%', :query, '%'))
-        ORDER BY p.displayOrder
+            OR LOWER(p.technologies) LIKE LOWER(CONCAT('%', :query, '%')))
     """)
-    java.util.List<Project> searchProjects(@Param("query") String query);
+    Page<Project> searchProjects(
+            @Param("query") String query,
+            Pageable pageable);
 
-    Page<Project> findAllByOrderByDisplayOrderAsc(Pageable pageable);
+        @Query("""
+        SELECT p
+        FROM Project p
+        WHERE
+            (:query IS NULL
+            OR TRIM(:query) = ''
+            OR LOWER(p.projectName) LIKE LOWER(CONCAT('%', :query, '%'))
+            OR LOWER(p.description) LIKE LOWER(CONCAT('%', :query, '%'))
+            OR LOWER(p.technologies) LIKE LOWER(CONCAT('%', :query, '%')))
+        ORDER BY p.displayOrder ASC
+    """)
+    List<Project> searchProjects(@Param("query") String query);
 
 }

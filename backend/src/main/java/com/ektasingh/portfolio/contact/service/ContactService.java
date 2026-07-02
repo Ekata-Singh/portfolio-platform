@@ -13,7 +13,13 @@ public interface ContactService {
 
     List<ContactResponse> getAllContacts();
 
-    PageResponse<ContactResponse> getContacts(int page, int size);
+    PageResponse<ContactResponse> getContacts(
+        int page,
+        int size,
+        String query,
+        String sortBy,
+        String direction
+);
 
     ContactResponse updateContact(Long id,
                                   ContactCreateRequest request);

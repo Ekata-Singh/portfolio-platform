@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,12 +53,21 @@ public class ProjectServiceImpl implements ProjectService {
     }
     
     @Override
-    public PageResponse<ProjectResponse> getProjects(int page, int size) {
+    public PageResponse<ProjectResponse> getProjects(
+            String query,
+            int page,
+            int size,
+            String sortBy,
+            String direction) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<Project> projectPage =
-                repository.findAllByOrderByDisplayOrderAsc(pageable);
+                repository.searchProjects(query, pageable);
 
         PageResponse<ProjectResponse> response = new PageResponse<>();
 

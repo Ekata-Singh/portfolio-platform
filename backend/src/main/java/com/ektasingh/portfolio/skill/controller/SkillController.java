@@ -56,10 +56,18 @@ public class SkillController {
 
     @GetMapping("/page")
     public ResponseEntity<PageResponse<SkillResponse>> getSkills(
+
+            @RequestParam(defaultValue = "") String query,
+
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+
+            @RequestParam(defaultValue = "10") int size,
+
+            @RequestParam(defaultValue = "displayOrder") String sortBy,
+
+            @RequestParam(defaultValue = "asc") String direction) {
 
         return ResponseEntity.ok(
-                service.getSkills(page, size));
+                service.getSkills(query, page, size, sortBy, direction));
     }
 }

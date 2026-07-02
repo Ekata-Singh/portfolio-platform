@@ -13,7 +13,12 @@ public interface SkillService {
 
     List<SkillResponse> getAllSkills();
 
-    PageResponse<SkillResponse> getSkills(int page, int size);
+    PageResponse<SkillResponse> getSkills(
+        String query,
+        int page,
+        int size,
+        String sortBy,
+        String direction);
 
     SkillResponse updateSkill(Long id,
                               SkillCreateRequest request);

@@ -14,7 +14,13 @@ public interface ProjectService {
 
     List<ProjectResponse> getAllProjects();
 
-    PageResponse<ProjectResponse> getProjects(int page, int size);
+    PageResponse<ProjectResponse> getProjects(
+            String query,
+            int page,
+            int size,
+            String sortBy,
+            String direction
+    );
 
     ProjectResponse updateProject(Long id, ProjectCreateRequest request);
 

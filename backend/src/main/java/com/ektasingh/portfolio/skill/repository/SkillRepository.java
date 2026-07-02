@@ -25,4 +25,17 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
     List<Skill> searchSkills(@Param("query") String query);
 
     Page<Skill> findAllByOrderByDisplayOrderAsc(Pageable pageable);
+
+    @Query("""
+        SELECT s
+        FROM Skill s
+        WHERE
+        LOWER(s.skillName) LIKE LOWER(CONCAT('%', :query, '%'))
+        OR LOWER(s.category) LIKE LOWER(CONCAT('%', :query, '%'))
+        OR LOWER(s.proficiency) LIKE LOWER(CONCAT('%', :query, '%'))
+        """)
+        Page<Skill> searchSkillsPage(
+                @Param("query") String query,
+                Pageable pageable);
+
 }

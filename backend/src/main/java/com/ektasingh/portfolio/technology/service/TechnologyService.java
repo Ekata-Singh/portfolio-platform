@@ -13,7 +13,12 @@ public interface TechnologyService {
 
     List<TechnologyResponse> getAllTechnologies();
 
-    PageResponse<TechnologyResponse> getTechnologies(int page, int size);
+    PageResponse<TechnologyResponse> getTechnologies(
+        int page,
+        int size,
+        String query,
+        String sortBy,
+        String direction);
 
     TechnologyResponse updateTechnology(
             Long id,

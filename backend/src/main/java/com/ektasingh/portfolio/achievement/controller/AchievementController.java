@@ -63,13 +63,24 @@ public class AchievementController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<PageResponse<AchievementResponse>> getAchievements(
+        public ResponseEntity<PageResponse<AchievementResponse>> getAchievements(
 
-            @RequestParam(defaultValue = "0") int page,
+                @RequestParam(defaultValue = "0") int page,
 
-            @RequestParam(defaultValue = "10") int size) {
+                @RequestParam(defaultValue = "10") int size,
+
+                @RequestParam(required = false) String query,
+
+                @RequestParam(defaultValue = "displayOrder") String sortBy,
+
+                @RequestParam(defaultValue = "asc") String direction) {
 
         return ResponseEntity.ok(
-                achievementService.getAchievements(page, size));
-    }
+                achievementService.getAchievements(
+                        page,
+                        size,
+                        query,
+                        sortBy,
+                        direction));
+        }
 }

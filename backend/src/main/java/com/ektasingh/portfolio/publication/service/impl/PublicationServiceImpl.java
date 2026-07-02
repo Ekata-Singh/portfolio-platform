@@ -11,7 +11,7 @@ import com.ektasingh.portfolio.publication.service.PublicationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -53,21 +53,34 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
-public PageResponse<PublicationResponse> getPublications(int page, int size) {
+    public PageResponse<PublicationResponse> getPublications(
+            int page,
+            int size,
+            String query,
+            String sortBy,
+            String direction) {
 
-    Pageable pageable = PageRequest.of(page, size);
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
 
-    Page<Publication> publicationPage =
-            repository.findAllByOrderByDisplayOrderAsc(pageable);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-    PageResponse<PublicationResponse> response = new PageResponse<>();
+        Page<Publication> publicationPage;
+
+        if (query != null && !query.isBlank()) {
+            publicationPage = repository.searchPublications(query, pageable);
+        } else {
+            publicationPage = repository.findAll(pageable);
+        }
+
+        PageResponse<PublicationResponse> response = new PageResponse<>();
 
         response.setContent(
                 publicationPage.getContent()
                         .stream()
                         .map(mapper::toResponse)
-                        .toList()
-        );
+                        .toList());
 
         response.setPage(publicationPage.getNumber());
 

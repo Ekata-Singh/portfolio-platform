@@ -8,7 +8,7 @@ import com.ektasingh.portfolio.blog.mapper.BlogMapper;
 import com.ektasingh.portfolio.blog.repository.BlogRepository;
 import com.ektasingh.portfolio.blog.service.BlogService;
 import com.ektasingh.portfolio.common.dto.response.PageResponse;
-
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -76,36 +76,43 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public PageResponse<BlogResponse> getBlogs(int page, int size) {
+public PageResponse<BlogResponse> getBlogs(
+        String query,
+        int page,
+        int size,
+        String sortBy,
+        String direction) {
 
-        Pageable pageable = PageRequest.of(page, size);
+    Sort sort = direction.equalsIgnoreCase("desc")
+            ? Sort.by(sortBy).descending()
+            : Sort.by(sortBy).ascending();
 
-        Page<Blog> blogPage =
-                repository.findAllByOrderByDisplayOrderAsc(pageable);
+    Pageable pageable = PageRequest.of(page, size, sort);
 
-        PageResponse<BlogResponse> response = new PageResponse<>();
+    Page<Blog> blogPage;
 
-        response.setContent(
-                blogPage.getContent()
-                        .stream()
-                        .map(mapper::toResponse)
-                        .toList()
-        );
-
-        response.setPage(blogPage.getNumber());
-
-        response.setSize(blogPage.getSize());
-
-        response.setTotalElements(blogPage.getTotalElements());
-
-        response.setTotalPages(blogPage.getTotalPages());
-
-        response.setFirst(blogPage.isFirst());
-
-        response.setLast(blogPage.isLast());
-
-        response.setEmpty(blogPage.isEmpty());
-
-        return response;
+    if (query == null || query.trim().isEmpty()) {
+        blogPage = repository.findAll(pageable);
+    } else {
+        blogPage = repository.searchBlogsPage(query, pageable);
     }
+
+    PageResponse<BlogResponse> response = new PageResponse<>();
+
+    response.setContent(
+            blogPage.getContent()
+                    .stream()
+                    .map(mapper::toResponse)
+                    .toList());
+
+    response.setPage(blogPage.getNumber());
+    response.setSize(blogPage.getSize());
+    response.setTotalElements(blogPage.getTotalElements());
+    response.setTotalPages(blogPage.getTotalPages());
+    response.setFirst(blogPage.isFirst());
+    response.setLast(blogPage.isLast());
+    response.setEmpty(blogPage.isEmpty());
+
+    return response;
+}
 }

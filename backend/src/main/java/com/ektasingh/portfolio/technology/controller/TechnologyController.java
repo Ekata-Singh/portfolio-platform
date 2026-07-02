@@ -63,11 +63,24 @@ public class TechnologyController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<PageResponse<TechnologyResponse>> getTechnologies(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+        public ResponseEntity<PageResponse<TechnologyResponse>> getTechnologies(
+
+                @RequestParam(defaultValue = "") String query,
+
+                @RequestParam(defaultValue = "0") int page,
+
+                @RequestParam(defaultValue = "10") int size,
+
+                @RequestParam(defaultValue = "displayOrder") String sortBy,
+
+                @RequestParam(defaultValue = "asc") String direction) {
 
         return ResponseEntity.ok(
-                technologyService.getTechnologies(page, size));
-    }
+                technologyService.getTechnologies(
+                        page,
+                        size,
+                        query,
+                        sortBy,
+                        direction));
+        }
 }

@@ -13,7 +13,12 @@ public interface BlogService {
 
     List<BlogResponse> getAllBlogs();
 
-    PageResponse<BlogResponse> getBlogs(int page, int size);
+    PageResponse<BlogResponse> getBlogs(
+        String query,
+        int page,
+        int size,
+        String sortBy,
+        String direction);
 
     BlogResponse updateBlog(Long id,
                             BlogCreateRequest request);

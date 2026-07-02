@@ -11,7 +11,7 @@ import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -76,13 +76,29 @@ public class CertificationServiceImpl implements CertificationService {
             repository.delete(certification);
         }
 
-        @Override
-    public PageResponse<CertificationResponse> getCertifications(int page, int size) {
+    @Override
+    public PageResponse<CertificationResponse> getCertifications(
+            int page,
+            int size,
+            String query,
+            String sortBy,
+            String direction) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
 
-        Page<Certification> certificationPage =
-                repository.findAllByOrderByDisplayOrderAsc(pageable);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Certification> certificationPage;
+
+        if (query != null && !query.isBlank()) {
+            certificationPage =
+                    repository.searchCertifications(query, pageable);
+        } else {
+            certificationPage =
+                    repository.findAll(pageable);
+        }
 
         PageResponse<CertificationResponse> response = new PageResponse<>();
 
@@ -90,23 +106,18 @@ public class CertificationServiceImpl implements CertificationService {
                 certificationPage.getContent()
                         .stream()
                         .map(mapper::toResponse)
-                        .toList()
-        );
+                        .toList());
 
         response.setPage(certificationPage.getNumber());
-
         response.setSize(certificationPage.getSize());
-
         response.setTotalElements(certificationPage.getTotalElements());
-
         response.setTotalPages(certificationPage.getTotalPages());
-
         response.setFirst(certificationPage.isFirst());
-
         response.setLast(certificationPage.isLast());
-
         response.setEmpty(certificationPage.isEmpty());
 
         return response;
     }
+
+
 }

@@ -9,6 +9,7 @@ import com.ektasingh.portfolio.skill.mapper.SkillMapper;
 import com.ektasingh.portfolio.skill.repository.SkillRepository;
 import com.ektasingh.portfolio.skill.service.SkillService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -75,12 +76,26 @@ public class SkillServiceImpl implements SkillService {
     }
 
     @Override
-    public PageResponse<SkillResponse> getSkills(int page, int size) {
+    public PageResponse<SkillResponse> getSkills(
+            String query,
+            int page,
+            int size,
+            String sortBy,
+            String direction) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
 
-        Page<Skill> skillPage =
-                repository.findAllByOrderByDisplayOrderAsc(pageable);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Skill> skillPage;
+
+        if (query == null || query.trim().isEmpty()) {
+            skillPage = repository.findAll(pageable);
+        } else {
+            skillPage = repository.searchSkillsPage(query, pageable);
+        }
 
         PageResponse<SkillResponse> response = new PageResponse<>();
 
@@ -88,23 +103,17 @@ public class SkillServiceImpl implements SkillService {
                 skillPage.getContent()
                         .stream()
                         .map(mapper::toResponse)
-                        .toList()
-        );
+                        .toList());
 
         response.setPage(skillPage.getNumber());
-
         response.setSize(skillPage.getSize());
-
         response.setTotalElements(skillPage.getTotalElements());
-
         response.setTotalPages(skillPage.getTotalPages());
-
         response.setFirst(skillPage.isFirst());
-
         response.setLast(skillPage.isLast());
-
         response.setEmpty(skillPage.isEmpty());
 
         return response;
     }
+
 }

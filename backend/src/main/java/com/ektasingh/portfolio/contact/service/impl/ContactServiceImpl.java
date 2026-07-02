@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Sort;
 import java.util.List;
 
 @Service
@@ -86,12 +86,28 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public PageResponse<ContactResponse> getContacts(int page, int size) {
+    public PageResponse<ContactResponse> getContacts(
+            int page,
+            int size,
+            String query,
+            String sortBy,
+            String direction) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
 
-        Page<Contact> contactPage =
-                repository.findAllByOrderByIdAsc(pageable);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Contact> contactPage;
+
+        if (query != null && !query.isBlank()) {
+            contactPage =
+                    repository.searchContacts(query, pageable);
+        } else {
+            contactPage =
+                    repository.findAll(pageable);
+        }
 
         PageResponse<ContactResponse> response = new PageResponse<>();
 
@@ -99,23 +115,17 @@ public class ContactServiceImpl implements ContactService {
                 contactPage.getContent()
                         .stream()
                         .map(mapper::toResponse)
-                        .toList()
-        );
+                        .toList());
 
         response.setPage(contactPage.getNumber());
-
         response.setSize(contactPage.getSize());
-
         response.setTotalElements(contactPage.getTotalElements());
-
         response.setTotalPages(contactPage.getTotalPages());
-
         response.setFirst(contactPage.isFirst());
-
         response.setLast(contactPage.isLast());
-
         response.setEmpty(contactPage.isEmpty());
 
         return response;
     }
+
 }

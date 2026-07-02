@@ -23,4 +23,17 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
     List<Blog> searchBlogs(@Param("query") String query);
 
     Page<Blog> findAllByOrderByDisplayOrderAsc(Pageable pageable);
+
+    @Query("""
+        SELECT b
+        FROM Blog b
+        WHERE
+        LOWER(b.title) LIKE LOWER(CONCAT('%', :query, '%'))
+        OR LOWER(b.summary) LIKE LOWER(CONCAT('%', :query, '%'))
+        OR LOWER(b.content) LIKE LOWER(CONCAT('%', :query, '%'))
+        """)
+        Page<Blog> searchBlogsPage(
+                @Param("query") String query,
+                Pageable pageable);
+
 }

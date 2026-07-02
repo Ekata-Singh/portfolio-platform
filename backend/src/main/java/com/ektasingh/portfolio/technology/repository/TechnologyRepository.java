@@ -25,4 +25,16 @@ public interface TechnologyRepository extends JpaRepository<Technology, Long> {
     List<Technology> searchTechnologies(@Param("query") String query);
 
     Page<Technology> findAllByOrderByDisplayOrderAsc(Pageable pageable);
+
+    @Query("""
+        SELECT t
+        FROM Technology t
+        WHERE
+        LOWER(t.technologyName) LIKE LOWER(CONCAT('%', :query, '%'))
+        OR LOWER(t.category) LIKE LOWER(CONCAT('%', :query, '%'))
+        OR LOWER(t.proficiency) LIKE LOWER(CONCAT('%', :query, '%'))
+        """)
+        Page<Technology> searchTechnologiesPage(
+                @Param("query") String query,
+                Pageable pageable);
 }

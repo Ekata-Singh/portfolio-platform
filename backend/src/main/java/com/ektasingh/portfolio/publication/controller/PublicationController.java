@@ -69,9 +69,20 @@ public class PublicationController {
 
                 @RequestParam(defaultValue = "0") int page,
 
-                @RequestParam(defaultValue = "10") int size) {
+                @RequestParam(defaultValue = "10") int size,
+
+                @RequestParam(required = false) String query,
+
+                @RequestParam(defaultValue = "displayOrder") String sortBy,
+
+                @RequestParam(defaultValue = "asc") String direction) {
 
         return ResponseEntity.ok(
-                publicationService.getPublications(page, size));
+                publicationService.getPublications(
+                        page,
+                        size,
+                        query,
+                        sortBy,
+                        direction));
         }
 }
