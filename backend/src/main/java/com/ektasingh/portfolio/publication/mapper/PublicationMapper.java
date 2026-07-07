@@ -19,6 +19,8 @@ public class PublicationMapper {
         publication.setPublicationDate(request.getPublicationDate());
         publication.setPublicationUrl(request.getPublicationUrl());
         publication.setDescription(request.getDescription());
+        publication.setTags(request.getTags());
+        publication.setThumbnailUrl(request.getThumbnailUrl());
         publication.setDisplayOrder(request.getDisplayOrder());
 
         publication.setCreatedAt(LocalDateTime.now());
@@ -37,6 +39,8 @@ public class PublicationMapper {
         response.setPublicationDate(publication.getPublicationDate());
         response.setPublicationUrl(publication.getPublicationUrl());
         response.setDescription(publication.getDescription());
+        response.setTags(publication.getTags());
+        response.setThumbnailUrl(publication.getThumbnailUrl());
         response.setDisplayOrder(publication.getDisplayOrder());
         response.setCreatedAt(publication.getCreatedAt());
         response.setUpdatedAt(publication.getUpdatedAt());
@@ -52,6 +56,8 @@ public class PublicationMapper {
         publication.setPublicationDate(request.getPublicationDate());
         publication.setPublicationUrl(request.getPublicationUrl());
         publication.setDescription(request.getDescription());
+        publication.setTags(request.getTags());
+        publication.setThumbnailUrl(request.getThumbnailUrl());
         publication.setDisplayOrder(request.getDisplayOrder());
 
         publication.setUpdatedAt(LocalDateTime.now());

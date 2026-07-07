@@ -75,6 +75,8 @@ public class ExperienceServiceImpl implements ExperienceService {
         experience.setEndDate(request.getEndDate());
         experience.setCurrentlyWorking(request.getCurrentlyWorking());
         experience.setDescription(request.getDescription());
+        experience.setTechnologies(request.getTechnologies());
+        experience.setFeatured(request.getFeatured() != null && request.getFeatured());
 
         Experience updatedExperience =
                 experienceRepository.save(experience);

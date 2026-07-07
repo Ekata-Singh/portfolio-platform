@@ -3,6 +3,7 @@ package com.ektasingh.portfolio.certificate.service;
 import com.ektasingh.portfolio.certificate.dto.request.CertificationCreateRequest;
 import com.ektasingh.portfolio.certificate.dto.response.CertificationResponse;
 import com.ektasingh.portfolio.common.dto.response.PageResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,5 +28,7 @@ public interface CertificationService {
             CertificationCreateRequest request);
 
     void deleteCertification(Long id);
+
+    CertificationResponse uploadThumbnail(Long id, MultipartFile file);
 
 }

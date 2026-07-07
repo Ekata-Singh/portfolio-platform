@@ -15,6 +15,7 @@ public class ProjectMapper {
         project.setProjectName(request.getProjectName());
         project.setDescription(request.getDescription());
         project.setTechnologies(request.getTechnologies());
+        project.setThumbnailUrl(request.getThumbnailUrl());
         project.setProjectUrl(request.getProjectUrl());
         project.setGithubUrl(request.getGithubUrl());
         project.setDisplayOrder(request.getDisplayOrder());
@@ -30,6 +31,7 @@ public class ProjectMapper {
         response.setProjectName(project.getProjectName());
         response.setDescription(project.getDescription());
         response.setTechnologies(project.getTechnologies());
+        response.setThumbnailUrl(project.getThumbnailUrl());
         response.setProjectUrl(project.getProjectUrl());
         response.setGithubUrl(project.getGithubUrl());
         response.setDisplayOrder(project.getDisplayOrder());

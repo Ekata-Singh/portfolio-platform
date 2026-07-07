@@ -31,6 +31,10 @@ public class ProfileResponse {
 
     private String resumeUrl;
 
+    private String codeforcesUrl;
+
+    private String leetcodeUrl;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

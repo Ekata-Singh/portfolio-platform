@@ -27,6 +27,8 @@ public class EducationResponse {
 
     private String description;
 
+    private String subjects;
+
     private String createdAt;
 
     private String updatedAt;

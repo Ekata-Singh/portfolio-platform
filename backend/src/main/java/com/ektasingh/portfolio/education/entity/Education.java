@@ -42,6 +42,8 @@ public class Education {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    private String subjects;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

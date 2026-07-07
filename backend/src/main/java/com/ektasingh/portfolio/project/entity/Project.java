@@ -24,6 +24,9 @@ public class Project {
 
     private String technologies;
 
+    @Column(name = "thumbnail_url", length = 500)
+    private String thumbnailUrl;
+
     @Column(name = "project_url")
     private String projectUrl;
 

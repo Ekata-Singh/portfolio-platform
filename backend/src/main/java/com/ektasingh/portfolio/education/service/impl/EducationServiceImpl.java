@@ -110,6 +110,7 @@ public class EducationServiceImpl implements EducationService {
         education.setEndYear(request.getEndYear());
         education.setGrade(request.getGrade());
         education.setDescription(request.getDescription());
+        education.setSubjects(request.getSubjects());
 
         Education updatedEducation = educationRepository.save(education);
 

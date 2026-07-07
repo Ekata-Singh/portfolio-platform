@@ -8,12 +8,14 @@ import com.ektasingh.portfolio.certificate.mapper.CertificationMapper;
 import com.ektasingh.portfolio.certificate.repository.CertificationRepository;
 import com.ektasingh.portfolio.certificate.service.CertificationService;
 import com.ektasingh.portfolio.common.dto.response.PageResponse;
+import com.ektasingh.portfolio.storage.FileStorageService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class CertificationServiceImpl implements CertificationService {
 
     private final CertificationRepository repository;
     private final CertificationMapper mapper;
+    private final FileStorageService fileStorageService;
 
     @Override
     public CertificationResponse createCertification(CertificationCreateRequest request) {
@@ -75,6 +78,21 @@ public class CertificationServiceImpl implements CertificationService {
 
             repository.delete(certification);
         }
+
+    @Override
+    public CertificationResponse uploadThumbnail(Long id, MultipartFile file) {
+
+        Certification certification = repository.findById(id)
+                .orElseThrow(() -> new CertificationNotFoundException(id));
+
+        String thumbnailPath = fileStorageService.storeCertificationThumbnail(file);
+
+        certification.setThumbnailUrl(thumbnailPath);
+
+        Certification savedCertification = repository.save(certification);
+
+        return mapper.toResponse(savedCertification);
+    }
 
     @Override
     public PageResponse<CertificationResponse> getCertifications(

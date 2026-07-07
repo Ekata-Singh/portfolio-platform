@@ -3,6 +3,7 @@ package com.ektasingh.portfolio.achievement.service;
 import com.ektasingh.portfolio.achievement.dto.request.AchievementCreateRequest;
 import com.ektasingh.portfolio.achievement.dto.response.AchievementResponse;
 import com.ektasingh.portfolio.common.dto.response.PageResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,4 +28,6 @@ public interface AchievementService {
             AchievementCreateRequest request);
 
     void deleteAchievement(Long id);
+
+    AchievementResponse uploadCertificate(Long id, MultipartFile file);
 }

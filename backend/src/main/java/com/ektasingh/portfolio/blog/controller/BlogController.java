@@ -5,6 +5,8 @@ import com.ektasingh.portfolio.blog.dto.response.BlogResponse;
 import com.ektasingh.portfolio.blog.service.BlogService;
 import com.ektasingh.portfolio.common.dto.response.PageResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,11 +18,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/blog")
 @RequiredArgsConstructor
+@Tag(name = "Blogs", description = "Blog Management APIs")
 public class BlogController {
 
     private final BlogService blogService;
 
     @PostMapping
+    @Operation(summary = "Create Blog")
     public ResponseEntity<BlogResponse> createBlog(
             @Valid @RequestBody BlogCreateRequest request) {
 
@@ -29,6 +33,7 @@ public class BlogController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get Blog by ID")
     public ResponseEntity<BlogResponse> getBlogById(
             @PathVariable Long id) {
 
@@ -36,12 +41,14 @@ public class BlogController {
     }
 
     @GetMapping
+    @Operation(summary = "Get All Blogs")
     public ResponseEntity<List<BlogResponse>> getAllBlogs() {
 
         return ResponseEntity.ok(blogService.getAllBlogs());
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update Blog")
     public ResponseEntity<BlogResponse> updateBlog(
             @PathVariable Long id,
             @Valid @RequestBody BlogCreateRequest request) {
@@ -51,6 +58,7 @@ public class BlogController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete Blog")
     public ResponseEntity<Void> deleteBlog(
             @PathVariable Long id) {
 
@@ -60,6 +68,7 @@ public class BlogController {
     }
 
     @GetMapping("/page")
+    @Operation(summary = "Get Paginated Blogs")
     public ResponseEntity<PageResponse<BlogResponse>> getBlogs(
 
             @RequestParam(defaultValue = "") String query,

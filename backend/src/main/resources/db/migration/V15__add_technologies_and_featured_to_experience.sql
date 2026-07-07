@@ -1,0 +1,3 @@
+ALTER TABLE experience
+    ADD COLUMN technologies VARCHAR(500),
+    ADD COLUMN featured BOOLEAN NOT NULL DEFAULT FALSE;

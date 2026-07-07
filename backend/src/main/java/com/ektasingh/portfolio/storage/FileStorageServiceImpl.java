@@ -27,6 +27,26 @@ public class FileStorageServiceImpl implements FileStorageService {
         return storeFile(file, "resume");
     }
 
+    @Override
+    public String storeProjectThumbnail(MultipartFile file) {
+        return storeFile(file, "project");
+    }
+
+    @Override
+    public String storeAchievementCertificate(MultipartFile file) {
+        return storeFile(file, "achievement");
+    }
+
+    @Override
+    public String storePublicationThumbnail(MultipartFile file) {
+        return storeFile(file, "publication");
+    }
+
+    @Override
+    public String storeCertificationThumbnail(MultipartFile file) {
+        return storeFile(file, "certificate");
+    }
+
     /**
      * Common method for saving any uploaded file.
      */

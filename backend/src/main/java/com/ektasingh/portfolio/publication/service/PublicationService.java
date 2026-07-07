@@ -3,6 +3,7 @@ package com.ektasingh.portfolio.publication.service;
 import com.ektasingh.portfolio.publication.dto.request.PublicationCreateRequest;
 import com.ektasingh.portfolio.publication.dto.response.PublicationResponse;
 import com.ektasingh.portfolio.common.dto.response.PageResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,5 +27,7 @@ public interface PublicationService {
                                           PublicationCreateRequest request);
 
     void deletePublication(Long id);
+
+    PublicationResponse uploadThumbnail(Long id, MultipartFile file);
 
 }

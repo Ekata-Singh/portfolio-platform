@@ -8,12 +8,14 @@ import com.ektasingh.portfolio.publication.exception.PublicationNotFoundExceptio
 import com.ektasingh.portfolio.publication.mapper.PublicationMapper;
 import com.ektasingh.portfolio.publication.repository.PublicationRepository;
 import com.ektasingh.portfolio.publication.service.PublicationService;
+import com.ektasingh.portfolio.storage.FileStorageService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class PublicationServiceImpl implements PublicationService {
 
     private final PublicationRepository repository;
     private final PublicationMapper mapper;
+    private final FileStorageService fileStorageService;
 
     @Override
     public PublicationResponse createPublication(PublicationCreateRequest request) {
@@ -120,5 +123,20 @@ public class PublicationServiceImpl implements PublicationService {
                 .orElseThrow(() -> new PublicationNotFoundException(id));
 
         repository.delete(publication);
+    }
+
+    @Override
+    public PublicationResponse uploadThumbnail(Long id, MultipartFile file) {
+
+        Publication publication = repository.findById(id)
+                .orElseThrow(() -> new PublicationNotFoundException(id));
+
+        String thumbnailPath = fileStorageService.storePublicationThumbnail(file);
+
+        publication.setThumbnailUrl(thumbnailPath);
+
+        Publication savedPublication = repository.save(publication);
+
+        return mapper.toResponse(savedPublication);
     }
 }

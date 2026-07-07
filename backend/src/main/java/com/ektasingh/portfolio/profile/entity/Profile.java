@@ -43,6 +43,12 @@ public class Profile {
     @Column(name = "resume_url")
     private String resumeUrl;
 
+    @Column(name = "codeforces_url")
+    private String codeforcesUrl;
+
+    @Column(name = "leetcode_url")
+    private String leetcodeUrl;
+
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 

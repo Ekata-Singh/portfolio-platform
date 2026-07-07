@@ -31,6 +31,13 @@ public class Achievement {
     @Column(name = "achievement_url")
     private String achievementUrl;
 
+    private String category;
+
+    private String status;
+
+    @Column(name = "certificate_file_url", length = 500)
+    private String certificateFileUrl;
+
     @Column(name = "display_order", nullable = false)
     private Integer displayOrder;
 

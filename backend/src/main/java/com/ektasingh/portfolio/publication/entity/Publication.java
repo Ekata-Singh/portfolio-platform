@@ -32,6 +32,11 @@ public class Publication {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    private String tags;
+
+    @Column(name = "thumbnail_url", length = 500)
+    private String thumbnailUrl;
+
     @Column(name = "display_order", nullable = false)
     private Integer displayOrder;
 

@@ -22,6 +22,8 @@ public class ProfileMapper {
         profile.setProfileImageUrl(request.getProfileImageUrl());
         profile.setLinkedinUrl(request.getLinkedinUrl());
         profile.setResumeUrl(request.getResumeUrl());
+        profile.setCodeforcesUrl(request.getCodeforcesUrl());
+        profile.setLeetcodeUrl(request.getLeetcodeUrl());
 
         return profile;
     }
@@ -41,6 +43,8 @@ public class ProfileMapper {
         response.setProfileImageUrl(profile.getProfileImageUrl());
         response.setLinkedinUrl(profile.getLinkedinUrl());
         response.setResumeUrl(profile.getResumeUrl());
+        response.setCodeforcesUrl(profile.getCodeforcesUrl());
+        response.setLeetcodeUrl(profile.getLeetcodeUrl());
         response.setCreatedAt(profile.getCreatedAt());
         response.setUpdatedAt(profile.getUpdatedAt());
 

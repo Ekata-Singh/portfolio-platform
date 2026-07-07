@@ -74,6 +74,8 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setProfileImageUrl(request.getProfileImageUrl());
         profile.setLinkedinUrl(request.getLinkedinUrl());
         profile.setResumeUrl(request.getResumeUrl());
+        profile.setCodeforcesUrl(request.getCodeforcesUrl());
+        profile.setLeetcodeUrl(request.getLeetcodeUrl());
 
         Profile updatedProfile = repository.save(profile);
 

@@ -8,12 +8,14 @@ import com.ektasingh.portfolio.achievement.mapper.AchievementMapper;
 import com.ektasingh.portfolio.achievement.repository.AchievementRepository;
 import com.ektasingh.portfolio.achievement.service.AchievementService;
 import com.ektasingh.portfolio.common.dto.response.PageResponse;
+import com.ektasingh.portfolio.storage.FileStorageService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class AchievementServiceImpl implements AchievementService {
 
     private final AchievementRepository repository;
     private final AchievementMapper mapper;
+    private final FileStorageService fileStorageService;
 
     @Override
     public AchievementResponse createAchievement(AchievementCreateRequest request) {
@@ -117,5 +120,20 @@ public class AchievementServiceImpl implements AchievementService {
                 .orElseThrow(() -> new AchievementNotFoundException(id));
 
         repository.delete(achievement);
+    }
+
+    @Override
+    public AchievementResponse uploadCertificate(Long id, MultipartFile file) {
+
+        Achievement achievement = repository.findById(id)
+                .orElseThrow(() -> new AchievementNotFoundException(id));
+
+        String certificatePath = fileStorageService.storeAchievementCertificate(file);
+
+        achievement.setCertificateFileUrl(certificatePath);
+
+        Achievement savedAchievement = repository.save(achievement);
+
+        return mapper.toResponse(savedAchievement);
     }
 }
