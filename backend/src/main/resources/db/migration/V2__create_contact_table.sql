@@ -1,0 +1,24 @@
+CREATE TABLE contact (
+
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+
+    email VARCHAR(255) NOT NULL,
+
+    phone VARCHAR(20) NOT NULL,
+
+    address VARCHAR(255),
+
+    city VARCHAR(100),
+
+    state VARCHAR(100),
+
+    country VARCHAR(100),
+
+    postal_code VARCHAR(20),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP
+
+);
