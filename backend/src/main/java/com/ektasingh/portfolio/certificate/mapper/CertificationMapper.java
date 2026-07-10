@@ -18,6 +18,9 @@ public class CertificationMapper {
         certification.setExpiryDate(request.getExpiryDate());
         certification.setCredentialId(request.getCredentialId());
         certification.setCredentialUrl(request.getCredentialUrl());
+        certification.setType(request.getType());
+        certification.setCategory(request.getCategory());
+        certification.setThumbnailUrl(request.getThumbnailUrl());
         certification.setDisplayOrder(request.getDisplayOrder());
 
         return certification;
@@ -34,6 +37,9 @@ public class CertificationMapper {
         response.setExpiryDate(certification.getExpiryDate());
         response.setCredentialId(certification.getCredentialId());
         response.setCredentialUrl(certification.getCredentialUrl());
+        response.setType(certification.getType());
+        response.setCategory(certification.getCategory());
+        response.setThumbnailUrl(certification.getThumbnailUrl());
         response.setDisplayOrder(certification.getDisplayOrder());
         response.setCreatedAt(certification.getCreatedAt());
         response.setUpdatedAt(certification.getUpdatedAt());
@@ -51,6 +57,9 @@ public class CertificationMapper {
         certification.setExpiryDate(request.getExpiryDate());
         certification.setCredentialId(request.getCredentialId());
         certification.setCredentialUrl(request.getCredentialUrl());
+        certification.setType(request.getType());
+        certification.setCategory(request.getCategory());
+        certification.setThumbnailUrl(request.getThumbnailUrl());
         certification.setDisplayOrder(request.getDisplayOrder());
     }
 }

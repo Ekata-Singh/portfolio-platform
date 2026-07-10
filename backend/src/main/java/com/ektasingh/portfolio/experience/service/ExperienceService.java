@@ -1,5 +1,6 @@
 package com.ektasingh.portfolio.experience.service;
 
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import com.ektasingh.portfolio.experience.dto.request.ExperienceCreateRequest;
 import com.ektasingh.portfolio.experience.dto.response.ExperienceResponse;
 
@@ -15,6 +16,8 @@ public interface ExperienceService {
 
     ExperienceResponse updateExperience(Long id,
                                         ExperienceCreateRequest request);
+    
+    PageResponse<ExperienceResponse> getExperiences(int page, int size);
 
     void deleteExperience(Long id);
 }

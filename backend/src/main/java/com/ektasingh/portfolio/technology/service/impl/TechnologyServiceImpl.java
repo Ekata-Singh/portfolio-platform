@@ -1,5 +1,6 @@
 package com.ektasingh.portfolio.technology.service.impl;
 
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import com.ektasingh.portfolio.technology.dto.request.TechnologyCreateRequest;
 import com.ektasingh.portfolio.technology.dto.response.TechnologyResponse;
 import com.ektasingh.portfolio.technology.entity.Technology;
@@ -7,9 +8,12 @@ import com.ektasingh.portfolio.technology.exception.TechnologyNotFoundException;
 import com.ektasingh.portfolio.technology.mapper.TechnologyMapper;
 import com.ektasingh.portfolio.technology.repository.TechnologyRepository;
 import com.ektasingh.portfolio.technology.service.TechnologyService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Sort;
 import java.util.List;
 
 @Service
@@ -70,4 +74,57 @@ public class TechnologyServiceImpl implements TechnologyService {
 
         repository.delete(technology);
     }
+
+    @Override
+    public PageResponse<TechnologyResponse> getTechnologies(
+            int page,
+            int size,
+            String query,
+            String sortBy,
+            String direction) {
+
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Technology> technologyPage;
+
+        if (query == null || query.isBlank()) {
+            technologyPage = repository.findAll(pageable);
+        } else {
+            technologyPage = repository.searchTechnologiesPage(query, pageable);
+        }
+
+        PageResponse<TechnologyResponse> response = new PageResponse<>();
+
+        response.setContent(
+                technologyPage.getContent()
+                        .stream()
+                        .map(mapper::toResponse)
+                        .toList());
+
+        response.setPage(technologyPage.getNumber());
+
+        response.setSize(technologyPage.getSize());
+
+        response.setTotalElements(
+                technologyPage.getTotalElements());
+
+        response.setTotalPages(
+                technologyPage.getTotalPages());
+
+        response.setFirst(
+                technologyPage.isFirst());
+
+        response.setLast(
+                technologyPage.isLast());
+
+        response.setEmpty(
+                technologyPage.isEmpty());
+
+        return response;
+    }
+
 }

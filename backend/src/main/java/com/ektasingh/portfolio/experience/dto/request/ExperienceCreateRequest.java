@@ -30,4 +30,8 @@ public class ExperienceCreateRequest {
     private Boolean currentlyWorking;
 
     private String description;
+
+    private String technologies;
+
+    private Boolean featured;
 }

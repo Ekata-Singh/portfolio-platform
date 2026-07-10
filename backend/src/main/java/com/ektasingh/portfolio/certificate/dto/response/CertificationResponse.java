@@ -24,6 +24,12 @@ public class CertificationResponse {
 
     private String credentialUrl;
 
+    private String type;
+
+    private String category;
+
+    private String thumbnailUrl;
+
     private Integer displayOrder;
 
     private LocalDateTime createdAt;

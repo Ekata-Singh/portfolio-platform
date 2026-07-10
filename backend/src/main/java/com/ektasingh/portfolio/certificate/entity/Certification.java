@@ -35,6 +35,13 @@ public class Certification {
     @Column(name = "credential_url")
     private String credentialUrl;
 
+    private String type;
+
+    private String category;
+
+    @Column(name = "thumbnail_url", length = 500)
+    private String thumbnailUrl;
+
     @Column(name = "display_order", nullable = false)
     private Integer displayOrder;
 

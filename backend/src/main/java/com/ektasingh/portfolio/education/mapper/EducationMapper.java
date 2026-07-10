@@ -19,6 +19,7 @@ public class EducationMapper {
                 .endYear(request.getEndYear())
                 .grade(request.getGrade())
                 .description(request.getDescription())
+                .subjects(request.getSubjects())
                 .build();
     }
 
@@ -33,6 +34,7 @@ public class EducationMapper {
                 .endYear(education.getEndYear())
                 .grade(education.getGrade())
                 .description(education.getDescription())
+                .subjects(education.getSubjects())
                 .createdAt(
                         education.getCreatedAt() != null
                                 ? education.getCreatedAt().toString()

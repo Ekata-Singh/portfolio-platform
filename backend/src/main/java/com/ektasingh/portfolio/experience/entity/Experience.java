@@ -42,6 +42,11 @@ public class Experience {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    private String technologies;
+
+    @Column(name = "featured", nullable = false)
+    private Boolean featured;
+
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 

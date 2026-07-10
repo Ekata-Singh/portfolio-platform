@@ -22,6 +22,10 @@ public class PublicationResponse {
 
     private String description;
 
+    private String tags;
+
+    private String thumbnailUrl;
+
     private Integer displayOrder;
 
     private LocalDateTime createdAt;

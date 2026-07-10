@@ -7,6 +7,8 @@ import com.ektasingh.portfolio.profile.dto.response.ProfileResponse;
 import com.ektasingh.portfolio.profile.mapper.ProfileMapper;
 import com.ektasingh.portfolio.profile.repository.ProfileRepository;
 import com.ektasingh.portfolio.profile.service.ProfileService;
+import com.ektasingh.portfolio.storage.FileStorageService;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -15,12 +17,15 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final ProfileRepository repository;
     private final ProfileMapper mapper;
+    private final FileStorageService fileStorageService;
 
     public ProfileServiceImpl(ProfileRepository repository,
-                              ProfileMapper mapper) {
+                            ProfileMapper mapper,
+                            FileStorageService fileStorageService) {
 
         this.repository = repository;
         this.mapper = mapper;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
@@ -66,8 +71,11 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setPhone(request.getPhone());
         profile.setLocation(request.getLocation());
         profile.setGithubUrl(request.getGithubUrl());
+        profile.setProfileImageUrl(request.getProfileImageUrl());
         profile.setLinkedinUrl(request.getLinkedinUrl());
         profile.setResumeUrl(request.getResumeUrl());
+        profile.setCodeforcesUrl(request.getCodeforcesUrl());
+        profile.setLeetcodeUrl(request.getLeetcodeUrl());
 
         Profile updatedProfile = repository.save(profile);
 
@@ -82,4 +90,36 @@ public class ProfileServiceImpl implements ProfileService {
 
         repository.delete(profile);
     }
+
+    @Override
+    public ProfileResponse uploadProfileImage(Long id,
+                                            MultipartFile file) {
+
+        Profile profile = repository.findById(id)
+                .orElseThrow(() -> new ProfileNotFoundException(id));
+
+        String imagePath = fileStorageService.storeProfileImage(file);
+
+        profile.setProfileImageUrl(imagePath);
+
+        Profile savedProfile = repository.save(profile);
+
+        return mapper.toResponse(savedProfile);
+    }
+
+    @Override
+    public ProfileResponse uploadResume(Long id,
+                                        MultipartFile file) {
+
+        Profile profile = repository.findById(id)
+                .orElseThrow(() -> new ProfileNotFoundException(id));
+
+        String resumePath = fileStorageService.storeResume(file);
+
+        profile.setResumeUrl(resumePath);
+
+        Profile savedProfile = repository.save(profile);
+
+        return mapper.toResponse(savedProfile);
+}
 }

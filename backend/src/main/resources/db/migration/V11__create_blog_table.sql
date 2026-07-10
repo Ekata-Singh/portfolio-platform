@@ -1,0 +1,25 @@
+CREATE TABLE blog (
+
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+
+    title VARCHAR(255) NOT NULL,
+
+    slug VARCHAR(255) NOT NULL UNIQUE,
+
+    summary TEXT,
+
+    content LONGTEXT NOT NULL,
+
+    cover_image_url VARCHAR(500),
+
+    published BOOLEAN DEFAULT TRUE,
+
+    published_at TIMESTAMP,
+
+    display_order INT NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP
+);

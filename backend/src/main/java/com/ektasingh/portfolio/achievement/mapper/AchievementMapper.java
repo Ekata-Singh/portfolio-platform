@@ -19,6 +19,9 @@ public class AchievementMapper {
         achievement.setAchievementDate(request.getAchievementDate());
         achievement.setDescription(request.getDescription());
         achievement.setAchievementUrl(request.getAchievementUrl());
+        achievement.setCategory(request.getCategory());
+        achievement.setStatus(request.getStatus());
+        achievement.setCertificateFileUrl(request.getCertificateFileUrl());
         achievement.setDisplayOrder(request.getDisplayOrder());
 
         achievement.setCreatedAt(LocalDateTime.now());
@@ -37,6 +40,9 @@ public class AchievementMapper {
         response.setAchievementDate(achievement.getAchievementDate());
         response.setDescription(achievement.getDescription());
         response.setAchievementUrl(achievement.getAchievementUrl());
+        response.setCategory(achievement.getCategory());
+        response.setStatus(achievement.getStatus());
+        response.setCertificateFileUrl(achievement.getCertificateFileUrl());
         response.setDisplayOrder(achievement.getDisplayOrder());
         response.setCreatedAt(achievement.getCreatedAt());
         response.setUpdatedAt(achievement.getUpdatedAt());
@@ -53,6 +59,9 @@ public class AchievementMapper {
         achievement.setAchievementDate(request.getAchievementDate());
         achievement.setDescription(request.getDescription());
         achievement.setAchievementUrl(request.getAchievementUrl());
+        achievement.setCategory(request.getCategory());
+        achievement.setStatus(request.getStatus());
+        achievement.setCertificateFileUrl(request.getCertificateFileUrl());
         achievement.setDisplayOrder(request.getDisplayOrder());
 
         achievement.setUpdatedAt(LocalDateTime.now());

@@ -17,6 +17,8 @@ public class ProjectResponse {
 
     private String technologies;
 
+    private String thumbnailUrl;
+
     private String projectUrl;
 
     private String githubUrl;

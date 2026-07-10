@@ -1,5 +1,6 @@
 package com.ektasingh.portfolio.education.service.impl;
 
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import com.ektasingh.portfolio.education.dto.request.EducationCreateRequest;
 import com.ektasingh.portfolio.education.dto.response.EducationResponse;
 import com.ektasingh.portfolio.education.entity.Education;
@@ -8,6 +9,9 @@ import com.ektasingh.portfolio.education.mapper.EducationMapper;
 import com.ektasingh.portfolio.education.repository.EducationRepository;
 import com.ektasingh.portfolio.education.service.EducationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,6 +52,50 @@ public class EducationServiceImpl implements EducationService {
     }
 
     @Override
+    public PageResponse<EducationResponse> getEducations(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Education> educationPage =
+                educationRepository.findAll(pageable);
+
+        PageResponse<EducationResponse> response =
+                new PageResponse<>();
+
+        response.setContent(
+
+                educationPage.getContent()
+                        .stream()
+                        .map(EducationMapper::toResponse)
+                        .toList()
+
+        );
+
+        response.setPage(
+                educationPage.getNumber());
+
+        response.setSize(
+                educationPage.getSize());
+
+        response.setTotalElements(
+                educationPage.getTotalElements());
+
+        response.setTotalPages(
+                educationPage.getTotalPages());
+
+        response.setFirst(
+                educationPage.isFirst());
+
+        response.setLast(
+                educationPage.isLast());
+
+        response.setEmpty(
+                educationPage.isEmpty());
+
+        return response;
+    }
+
+    @Override
     public EducationResponse updateEducation(Long id,
                                              EducationCreateRequest request) {
 
@@ -62,6 +110,7 @@ public class EducationServiceImpl implements EducationService {
         education.setEndYear(request.getEndYear());
         education.setGrade(request.getGrade());
         education.setDescription(request.getDescription());
+        education.setSubjects(request.getSubjects());
 
         Education updatedEducation = educationRepository.save(education);
 

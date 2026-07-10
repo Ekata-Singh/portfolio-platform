@@ -2,6 +2,8 @@ package com.ektasingh.portfolio.publication.service;
 
 import com.ektasingh.portfolio.publication.dto.request.PublicationCreateRequest;
 import com.ektasingh.portfolio.publication.dto.response.PublicationResponse;
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -13,8 +15,19 @@ public interface PublicationService {
 
     List<PublicationResponse> getAllPublications();
 
+    PageResponse<PublicationResponse> getPublications(
+            int page,
+            int size,
+            String query,
+            String sortBy,
+            String direction
+    );
+
     PublicationResponse updatePublication(Long id,
                                           PublicationCreateRequest request);
 
     void deletePublication(Long id);
+
+    PublicationResponse uploadThumbnail(Long id, MultipartFile file);
+
 }

@@ -1,0 +1,88 @@
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: url('../assets/bg-emerald-marble.png') center / cover no-repeat,
+    var(--color-emerald-950);
+  padding: 24px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 360px;
+  max-width: 100%;
+  padding: 2.75rem 2.5rem;
+  background: var(--color-cream);
+  border: 1px solid var(--color-gold);
+  border-radius: 12px;
+  box-shadow: var(--shadow-soft);
+}
+
+.login-form h1 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-size: 1.75rem;
+}
+
+.login-form label {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-muted);
+}
+
+.login-form input {
+  padding: 0.65rem 0.75rem;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-white);
+  color: var(--color-ink);
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-soft);
+}
+
+.login-form button {
+  margin-top: 1.5rem;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  background: var(--color-emerald-950);
+  color: var(--color-on-dark);
+  border: 1px solid var(--color-emerald-950);
+  border-radius: 6px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.login-form button:hover:not(:disabled) {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+}
+
+.login-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-error {
+  color: #a13d3d;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 400px) {
+  .login-form {
+    padding: 2rem 1.5rem;
+  }
+}

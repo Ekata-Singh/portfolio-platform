@@ -25,6 +25,10 @@ public class ExperienceResponse {
 
     private String description;
 
+    private String technologies;
+
+    private Boolean featured;
+
     private String createdAt;
 
     private String updatedAt;

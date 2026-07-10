@@ -36,4 +36,6 @@ public class EducationCreateRequest {
     private String grade;
 
     private String description;
+
+    private String subjects;
 }

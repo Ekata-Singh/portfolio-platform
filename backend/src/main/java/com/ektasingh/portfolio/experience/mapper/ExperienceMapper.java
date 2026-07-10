@@ -20,6 +20,8 @@ public class ExperienceMapper {
                 .endDate(request.getEndDate())
                 .currentlyWorking(request.getCurrentlyWorking())
                 .description(request.getDescription())
+                .technologies(request.getTechnologies())
+                .featured(request.getFeatured() != null && request.getFeatured())
                 .build();
     }
 
@@ -43,6 +45,8 @@ public class ExperienceMapper {
                 )
                 .currentlyWorking(experience.getCurrentlyWorking())
                 .description(experience.getDescription())
+                .technologies(experience.getTechnologies())
+                .featured(experience.getFeatured())
                 .createdAt(
                         experience.getCreatedAt() != null
                                 ? experience.getCreatedAt().toString()

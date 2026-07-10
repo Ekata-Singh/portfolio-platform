@@ -22,6 +22,12 @@ public class AchievementResponse {
 
     private String achievementUrl;
 
+    private String category;
+
+    private String status;
+
+    private String certificateFileUrl;
+
     private Integer displayOrder;
 
     private LocalDateTime createdAt;

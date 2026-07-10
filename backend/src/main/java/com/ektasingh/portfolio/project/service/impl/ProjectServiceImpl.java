@@ -1,5 +1,6 @@
 package com.ektasingh.portfolio.project.service.impl;
 
+import com.ektasingh.portfolio.common.dto.response.PageResponse;
 import com.ektasingh.portfolio.project.dto.request.ProjectCreateRequest;
 import com.ektasingh.portfolio.project.dto.response.ProjectResponse;
 import com.ektasingh.portfolio.project.entity.Project;
@@ -7,8 +8,14 @@ import com.ektasingh.portfolio.project.exception.ProjectNotFoundException;
 import com.ektasingh.portfolio.project.mapper.ProjectMapper;
 import com.ektasingh.portfolio.project.repository.ProjectRepository;
 import com.ektasingh.portfolio.project.service.ProjectService;
+import com.ektasingh.portfolio.storage.FileStorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,6 +25,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository repository;
     private final ProjectMapper mapper;
+    private final FileStorageService fileStorageService;
 
     @Override
     public ProjectResponse createProject(ProjectCreateRequest request) {
@@ -46,6 +54,48 @@ public class ProjectServiceImpl implements ProjectService {
                 .map(mapper::toResponse)
                 .toList();
     }
+    
+    @Override
+    public PageResponse<ProjectResponse> getProjects(
+            String query,
+            int page,
+            int size,
+            String sortBy,
+            String direction) {
+
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Project> projectPage =
+                repository.searchProjects(query, pageable);
+
+        PageResponse<ProjectResponse> response = new PageResponse<>();
+
+        response.setContent(
+                projectPage.getContent()
+                        .stream()
+                        .map(mapper::toResponse)
+                        .toList());
+
+        response.setPage(projectPage.getNumber());
+
+        response.setSize(projectPage.getSize());
+
+        response.setTotalElements(projectPage.getTotalElements());
+
+        response.setTotalPages(projectPage.getTotalPages());
+
+        response.setFirst(projectPage.isFirst());
+
+        response.setLast(projectPage.isLast());
+
+        response.setEmpty(projectPage.isEmpty());
+
+        return response;
+    }
 
     @Override
     public ProjectResponse updateProject(Long id,
@@ -57,6 +107,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.setProjectName(request.getProjectName());
         project.setDescription(request.getDescription());
         project.setTechnologies(request.getTechnologies());
+        project.setThumbnailUrl(request.getThumbnailUrl());
         project.setProjectUrl(request.getProjectUrl());
         project.setGithubUrl(request.getGithubUrl());
         project.setDisplayOrder(request.getDisplayOrder());
@@ -73,5 +124,20 @@ public class ProjectServiceImpl implements ProjectService {
                 .orElseThrow(() -> new ProjectNotFoundException(id));
 
         repository.delete(project);
+    }
+
+    @Override
+    public ProjectResponse uploadThumbnail(Long id, MultipartFile file) {
+
+        Project project = repository.findById(id)
+                .orElseThrow(() -> new ProjectNotFoundException(id));
+
+        String thumbnailPath = fileStorageService.storeProjectThumbnail(file);
+
+        project.setThumbnailUrl(thumbnailPath);
+
+        Project savedProject = repository.save(project);
+
+        return mapper.toResponse(savedProject);
     }
 }
