@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.ektasingh.portfolio.contact.exception.ContactNotFoundException;
 import com.ektasingh.portfolio.profile.exception.ProfileNotFoundException;
+import com.ektasingh.portfolio.project.exception.ProjectNotFoundException;
+import com.ektasingh.portfolio.publication.exception.PublicationNotFoundException;
 import com.ektasingh.portfolio.skill.exception.SkillNotFoundException;
 import com.ektasingh.portfolio.education.exception.EducationNotFoundException;
 import com.ektasingh.portfolio.experience.exception.ExperienceNotFoundException;
@@ -145,4 +147,38 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(errorResponse);
     }
+
+    @ExceptionHandler(ProjectNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleProjectNotFoundException(
+            ProjectNotFoundException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse errorResponse = new ErrorResponse();
+
+        errorResponse.setTimestamp(LocalDateTime.now());
+        errorResponse.setStatus(HttpStatus.NOT_FOUND.value());
+        errorResponse.setError(HttpStatus.NOT_FOUND.getReasonPhrase());
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setPath(request.getRequestURI());
+        errorResponse.setValidationErrors(null);
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PublicationNotFoundException.class)
+        public ResponseEntity<ErrorResponse> handlePublicationNotFoundException(
+                PublicationNotFoundException ex,
+                HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse();
+
+        error.setTimestamp(LocalDateTime.now());
+        error.setStatus(HttpStatus.NOT_FOUND.value());
+        error.setError(HttpStatus.NOT_FOUND.getReasonPhrase());
+        error.setMessage(ex.getMessage());
+        error.setPath(request.getRequestURI());
+        error.setValidationErrors(null);
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
 }
