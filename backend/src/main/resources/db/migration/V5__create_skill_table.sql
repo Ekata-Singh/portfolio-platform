@@ -1,0 +1,17 @@
+CREATE TABLE skill (
+
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+
+    skill_name VARCHAR(100) NOT NULL,
+
+    category VARCHAR(100),
+
+    proficiency VARCHAR(30),
+
+    display_order INT,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP
+);
