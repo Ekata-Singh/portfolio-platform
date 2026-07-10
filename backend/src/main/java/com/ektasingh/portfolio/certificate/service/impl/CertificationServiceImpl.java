@@ -1,0 +1,73 @@
+package com.ektasingh.portfolio.certificate.service.impl;
+
+import com.ektasingh.portfolio.certificate.dto.request.CertificationCreateRequest;
+import com.ektasingh.portfolio.certificate.dto.response.CertificationResponse;
+import com.ektasingh.portfolio.certificate.entity.Certification;
+import com.ektasingh.portfolio.certificate.exception.CertificationNotFoundException;
+import com.ektasingh.portfolio.certificate.mapper.CertificationMapper;
+import com.ektasingh.portfolio.certificate.repository.CertificationRepository;
+import com.ektasingh.portfolio.certificate.service.CertificationService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class CertificationServiceImpl implements CertificationService {
+
+    private final CertificationRepository repository;
+    private final CertificationMapper mapper;
+
+    @Override
+    public CertificationResponse createCertification(CertificationCreateRequest request) {
+
+        Certification certification = mapper.toEntity(request);
+
+        Certification savedCertification = repository.save(certification);
+
+        return mapper.toResponse(savedCertification);
+    }
+
+    @Override
+    public CertificationResponse getCertificationById(Long id) {
+
+        Certification certification = repository.findById(id)
+                .orElseThrow(() -> new CertificationNotFoundException(id));
+
+        return mapper.toResponse(certification);
+    }
+
+    @Override
+    public List<CertificationResponse> getAllCertifications() {
+
+        return repository.findAll()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public CertificationResponse updateCertification(
+            Long id,
+            CertificationCreateRequest request) {
+
+        Certification certification = repository.findById(id)
+                .orElseThrow(() -> new CertificationNotFoundException(id));
+
+        mapper.updateEntity(certification, request);
+
+        Certification updatedCertification = repository.save(certification);
+
+        return mapper.toResponse(updatedCertification);
+    }
+
+    @Override
+    public void deleteCertification(Long id) {
+
+        Certification certification = repository.findById(id)
+                .orElseThrow(() -> new CertificationNotFoundException(id));
+
+        repository.delete(certification);
+    }
+}
