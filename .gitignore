@@ -16,6 +16,9 @@ Desktop.ini
 .env.*
 !.env.example
 
+# Local Spring Boot secrets (never commit real credentials)
+application-local.properties
+
 # ---------------------------------------------------------
 # Logs
 # ---------------------------------------------------------

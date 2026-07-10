@@ -53,7 +53,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                         // Authentication
-                        .requestMatchers("/api/v1/auth/**","/swagger-ui/**","/v3/api-docs/**","/swagger-ui.html","/uploads/**","/api/v1/search/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**","/swagger-ui/**","/v3/api-docs/**","/swagger-ui.html","/api/v1/search/**").permitAll()
 
                         // Public Portfolio APIs
                         .requestMatchers(HttpMethod.GET, "/api/v1/profile/**").permitAll()
