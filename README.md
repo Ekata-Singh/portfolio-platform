@@ -13,34 +13,34 @@ A personal portfolio site with a built-in admin editor. Visitors see the portfol
 
 ## Run locally
 
-**Prerequisites:** Java 21+, Node 20+, and MySQL 8 (or Docker).
+There's no database to create and no config file to write. Everything, including all your content, is entered through the website's admin editor.
+
+**Option A: one double-click (recommended)**
+
+Requires Java 21+ ([adoptium.net](https://adoptium.net)), Node.js 20+ ([nodejs.org](https://nodejs.org)) and MySQL 8 running.
+
+- **Windows:** double-click `start.bat`
+- **macOS / Linux:** run `./start.sh`
+
+The first run asks for your MySQL username and password once and saves them to a git-ignored file. It then creates the `portfolio_platform` database automatically, starts the API and opens the website.
+
+**Option B: Docker (nothing else to install)**
 
 ```bash
-docker run -d --name portfolio-mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=portfolio_platform -p 3306:3306 mysql:8.4
+docker compose up --build
 ```
 
-Create `backend/src/main/resources/application-local.properties`. It is gitignored, so real secrets are never committed:
+**Then:** open http://localhost:5173, click **Admin** (top right), and sign in with **`ekta` / `admin123`**. Edit any section with its ✎ / + buttons.
 
-```properties
-spring.datasource.password=root
-app.admin.password=choose-a-local-password
-# Optional, needed only for testing file uploads:
-cloudinary.cloud-name=...
-cloudinary.api-key=...
-cloudinary.api-secret=...
-```
+| | URL |
+| --- | --- |
+| Website | http://localhost:5173 |
+| API | http://localhost:8080 |
+| API docs (Swagger) | http://localhost:8080/swagger-ui.html |
 
-Start the API at http://localhost:8080 (Swagger UI is at `/swagger-ui.html`):
+Uploaded photos, resumes and certificates are saved in `backend/uploads/`. You don't need a Cloudinary account locally.
 
-```bash
-cd backend && ./mvnw spring-boot:run
-```
-
-Start the site at http://localhost:5173:
-
-```bash
-cd frontend && npm install && npm run dev
-```
+> The `admin123` default only applies on your own computer. A production deploy refuses to use defaults and requires `ADMIN_PASSWORD` and `JWT_SECRET`.
 
 ---
 
@@ -90,7 +90,7 @@ mysqldump -uroot -p portfolio_platform > dump.sql
 ```bash
 mysql -h <aiven-host> -P <port> -u avnadmin -p --ssl-mode=REQUIRED defaultdb < dump.sql
 ```
-Files uploaded before the Cloudinary migration were stored as local paths such as `profile/123_photo.jpg`. Those paths won't resolve in production, so re-upload them from the admin editor.
+Files uploaded locally are stored as paths such as `profile/123_photo.jpg` in `backend/uploads/`. Those don't exist on the server, so re-upload them from the admin editor once the site is live.
 
 ### Forgot the admin password?
 Set `ADMIN_RESET_PASSWORD=true` and a new `ADMIN_PASSWORD` in Render and redeploy once. Then remove `ADMIN_RESET_PASSWORD`.
@@ -101,12 +101,13 @@ Set `ADMIN_RESET_PASSWORD=true` and a new `ADMIN_PASSWORD` in Render and redeplo
 
 | Variable | Purpose | Default |
 | --- | --- | --- |
-| `DB_URL` / `DB_USERNAME` / `DB_PASSWORD` | MySQL connection | local MySQL, `root` |
-| `JWT_SECRET` | Signs login tokens (≥ 32 chars) | dev-only value |
+| `DB_URL` / `DB_USERNAME` / `DB_PASSWORD` | MySQL connection | local MySQL (database auto-created), `root` |
+| `JWT_SECRET` | Signs login tokens (≥ 32 chars; required in prod) | dev-only value |
 | `JWT_EXPIRATION` | Token lifetime in ms | `86400000` (24 h) |
-| `CLOUDINARY_CLOUD_NAME` / `_API_KEY` / `_API_SECRET` | File uploads | — |
+| `CLOUDINARY_CLOUD_NAME` / `_API_KEY` / `_API_SECRET` | File uploads (recommended in production) | empty → files saved to `UPLOAD_DIR` |
+| `UPLOAD_DIR` | Local upload folder | `uploads` |
 | `CORS_ALLOWED_ORIGINS` | Comma-separated origins, wildcards allowed | `http://localhost:5173` |
-| `ADMIN_USERNAME` / `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Admin account created on first start | `ekta` / — / — |
+| `ADMIN_USERNAME` / `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Admin account created on first start | `ekta` / — / `admin123` locally only |
 | `ADMIN_RESET_PASSWORD` | `true` = overwrite the stored admin password | `false` |
-| `SPRING_PROFILES_ACTIVE` | `local` loads `application-local.properties` | `local` |
+| `SPRING_PROFILES_ACTIVE` | `local` on your computer, `prod` when hosted (set by the Dockerfile) | `local` |
 | `JPA_SHOW_SQL` | Log SQL statements | `false` |

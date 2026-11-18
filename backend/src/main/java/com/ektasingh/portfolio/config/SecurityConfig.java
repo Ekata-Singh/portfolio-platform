@@ -56,6 +56,9 @@ public class SecurityConfig {
                         // Authentication
                         .requestMatchers("/api/v1/auth/**","/swagger-ui/**","/v3/api-docs/**","/swagger-ui.html","/api/v1/search/**").permitAll()
 
+                        // Locally stored uploads (when Cloudinary is not configured)
+                        .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+
                         // Health check for the hosting platform
                         .requestMatchers("/actuator/health", "/actuator/health/**").permitAll()
 

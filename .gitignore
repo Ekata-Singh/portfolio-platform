@@ -108,3 +108,6 @@ Icon?
 # ---------------------------------------------------------
 out/
 bin/
+# Locally stored uploads (when Cloudinary is not configured)
+backend/uploads/
+uploads/

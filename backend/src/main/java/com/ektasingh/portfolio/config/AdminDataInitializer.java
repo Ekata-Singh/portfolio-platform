@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -20,6 +22,10 @@ import java.time.LocalDateTime;
  * Credentials come from ADMIN_USERNAME / ADMIN_EMAIL / ADMIN_PASSWORD.
  * Set ADMIN_RESET_PASSWORD=true for one deploy to overwrite the stored
  * password with ADMIN_PASSWORD (useful if you forget it), then unset it.
+ *
+ * When running locally (the default "local" profile) and no ADMIN_PASSWORD is set,
+ * the password defaults to "admin123" so the app works with zero configuration.
+ * This default is never used in production.
  */
 @Component
 @RequiredArgsConstructor
@@ -30,6 +36,10 @@ public class AdminDataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final Environment environment;
+
+    private static final String LOCAL_DEFAULT_PASSWORD = "admin123";
 
     @Value("${app.admin.username}")
     private String adminUsername;
@@ -45,6 +55,14 @@ public class AdminDataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+
+        if (!StringUtils.hasText(adminPassword) && environment.acceptsProfiles(Profiles.of("local"))) {
+            adminPassword = LOCAL_DEFAULT_PASSWORD;
+            if (userRepository.count() == 0) {
+                log.warn("Local mode: creating admin '{}' with default password '{}'. "
+                        + "Set ADMIN_PASSWORD to change it.", adminUsername, LOCAL_DEFAULT_PASSWORD);
+            }
+        }
 
         if (userRepository.count() == 0) {
 

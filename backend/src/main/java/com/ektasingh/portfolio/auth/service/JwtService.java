@@ -3,7 +3,10 @@ package com.ektasingh.portfolio.auth.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,29 @@ public class JwtService {
 
     @Value("${jwt.expiration}")
     private long jwtExpiration;
+
+    private static final String DEV_SECRET = "local-dev-secret-key-do-not-use-in-production";
+
+    private final Environment environment;
+
+    public JwtService(Environment environment) {
+        this.environment = environment;
+    }
+
+    /**
+     * Fail fast on an unsafe signing key: the HMAC key must be at least 256 bits,
+     * and the public development default must never be used in production.
+     */
+    @PostConstruct
+    void validateSecret() {
+        if (secretKey == null || secretKey.getBytes(StandardCharsets.UTF_8).length < 32) {
+            throw new IllegalStateException("JWT_SECRET must be at least 32 characters long.");
+        }
+        if (DEV_SECRET.equals(secretKey) && environment.acceptsProfiles(Profiles.of("prod"))) {
+            throw new IllegalStateException(
+                    "JWT_SECRET is not set. Set it to a long random value in production.");
+        }
+    }
 
     /**
      * Generate JWT with custom claims
