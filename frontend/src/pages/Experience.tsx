@@ -9,7 +9,7 @@ import {
 } from '../services/experienceAdminService';
 import { getTechList } from '../utils/project';
 import nomuraIcon from '../assets/nomura-icon.jpeg';
-import drdoIcon from '../assets/drdo.png';
+import drdoIcon from '../assets/drdo.webp';
 import type { Experience as ExperienceItem } from '../types/portfolio';
 import type { ExperienceRequest } from '../types/requests';
 

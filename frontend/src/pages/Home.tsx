@@ -9,6 +9,9 @@ import { ProjectsSection } from '../components/sections/ProjectsSection';
 import { AchievementsSection } from '../components/sections/AchievementsSection';
 import { PublicationsSection } from '../components/sections/PublicationsSection';
 import { CertificatesSection } from '../components/sections/CertificatesSection';
+import { SkillsSection } from '../components/sections/SkillsSection';
+import { BlogsPreviewSection } from '../components/sections/BlogsPreviewSection';
+import { ContactSection } from '../components/sections/ContactSection';
 
 export function Home() {
   const { data } = usePortfolio();
@@ -55,6 +58,8 @@ export function Home() {
 
       <Experience />
 
+      <SkillsSection skills={data?.skills ?? []} />
+
       <ProjectsSection projects={data?.projects ?? []} />
 
       <AchievementsSection achievements={data?.achievements ?? []} />
@@ -62,6 +67,10 @@ export function Home() {
       <PublicationsSection publications={data?.publications ?? []} />
 
       <CertificatesSection certifications={data?.certifications ?? []} />
+
+      <BlogsPreviewSection blogs={data?.blogs ?? []} />
+
+      <ContactSection contact={data?.contact} profile={profile} />
     </div>
   );
 }

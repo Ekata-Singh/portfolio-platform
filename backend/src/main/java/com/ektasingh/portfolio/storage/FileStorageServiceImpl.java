@@ -3,6 +3,7 @@ package com.ektasingh.portfolio.storage;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -55,7 +56,20 @@ public class FileStorageServiceImpl implements FileStorageService {
     private String uploadFile(MultipartFile file, String folderName) {
 
         if (file == null || file.isEmpty()) {
-            throw new RuntimeException("File cannot be empty.");
+            throw new IllegalArgumentException("File cannot be empty.");
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !isAllowedType(contentType)) {
+            throw new IllegalArgumentException(
+                    "Unsupported file type. Upload an image (JPG, PNG, WebP, GIF, SVG) or a PDF.");
+        }
+
+        if (!StringUtils.hasText(cloudinary.config.cloudName)
+                || !StringUtils.hasText(cloudinary.config.apiKey)
+                || !StringUtils.hasText(cloudinary.config.apiSecret)) {
+            throw new FileStorageException(
+                    "File uploads are not configured. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET.");
         }
 
         try {
@@ -69,8 +83,13 @@ public class FileStorageServiceImpl implements FileStorageService {
 
             return (String) uploadResult.get("secure_url");
 
-        } catch (IOException ex) {
-            throw new RuntimeException("Could not upload file: " + ex.getMessage());
+        } catch (IOException | RuntimeException ex) {
+            throw new FileStorageException("Could not upload file: " + ex.getMessage(), ex);
         }
+    }
+
+    private static boolean isAllowedType(String contentType) {
+        String type = contentType.toLowerCase();
+        return type.startsWith("image/") || type.equals("application/pdf");
     }
 }

@@ -1,14 +1,25 @@
-FROM eclipse-temurin:25-jdk AS build
+# ---------- Build stage ----------
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
+
 COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
 RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
+
 COPY src src
 RUN ./mvnw package -DskipTests -B
 
-FROM eclipse-temurin:25-jre
+# ---------- Runtime stage ----------
+FROM eclipse-temurin:21-jre
 WORKDIR /app
+
+RUN useradd --system --uid 1001 spring
 COPY --from=build /app/target/*.jar app.jar
+USER spring
+
+# Free hosting tiers give ~512MB RAM: cap the heap and keep startup lean.
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=70 -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -Xss512k"
+
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar"]

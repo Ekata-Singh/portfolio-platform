@@ -64,7 +64,7 @@ html {
 
 body {
   margin: 0;
-  background: url('./assets/bg-emerald-marble.png') center / cover no-repeat fixed,
+  background: url('./assets/bg-emerald-marble.webp') center / cover no-repeat fixed,
     var(--color-emerald-950);
 }
 

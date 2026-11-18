@@ -1,15 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-export function useSectionExpand(sectionId: string) {
+/**
+ * Collapsible section state that auto-expands when the URL hash targets the section
+ * (e.g. clicking "Skills" in the navbar navigates to /#skills).
+ */
+export function useSectionExpand(sectionId: string, defaultExpanded = true) {
   const location = useLocation();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const target = `#${sectionId}`;
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded || location.hash === target);
+  const [prevHash, setPrevHash] = useState(location.hash);
 
-  useEffect(() => {
-    if (location.hash === `#${sectionId}`) {
+  // Adjust state during render when the hash changes (avoids a cascading effect).
+  if (location.hash !== prevHash) {
+    setPrevHash(location.hash);
+    if (location.hash === target) {
       setIsExpanded(true);
     }
-  }, [location.hash, sectionId]);
+  }
 
   return [isExpanded, setIsExpanded] as const;
 }

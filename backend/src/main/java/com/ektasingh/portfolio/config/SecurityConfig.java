@@ -21,6 +21,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -54,6 +55,12 @@ public class SecurityConfig {
 
                         // Authentication
                         .requestMatchers("/api/v1/auth/**","/swagger-ui/**","/v3/api-docs/**","/swagger-ui.html","/api/v1/search/**").permitAll()
+
+                        // Health check for the hosting platform
+                        .requestMatchers("/actuator/health", "/actuator/health/**").permitAll()
+
+                        // CORS preflight
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // Public Portfolio APIs
                         .requestMatchers(HttpMethod.GET, "/api/v1/profile/**").permitAll()
@@ -99,7 +106,13 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of(allowedOrigins.split(",")));
+        // Patterns allow entries like https://*.vercel.app for preview deployments.
+        configuration.setAllowedOriginPatterns(
+                Arrays.stream(allowedOrigins.split(","))
+                        .map(String::trim)
+                        .map(origin -> origin.endsWith("/") ? origin.substring(0, origin.length() - 1) : origin)
+                        .filter(origin -> !origin.isEmpty())
+                        .toList());
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);

@@ -2,6 +2,7 @@ package com.ektasingh.portfolio.auth.filter;
 
 import com.ektasingh.portfolio.auth.service.CustomUserDetailsService;
 import com.ektasingh.portfolio.auth.service.JwtService;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -43,28 +45,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
 
-        String username = jwtService.extractUsername(token);
+        try {
+            String username = jwtService.extractUsername(token);
 
-        if (username != null
-                && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (username != null
+                    && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails =
-                    customUserDetailsService.loadUserByUsername(username);
+                UserDetails userDetails =
+                        customUserDetailsService.loadUserByUsername(username);
 
-            if (jwtService.isTokenValid(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities());
+                if (jwtService.isTokenValid(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities());
 
-                authentication.setDetails(
-                        new WebAuthenticationDetailsSource()
-                                .buildDetails(request));
+                    authentication.setDetails(
+                            new WebAuthenticationDetailsSource()
+                                    .buildDetails(request));
 
-                SecurityContextHolder.getContext()
-                        .setAuthentication(authentication);
+                    SecurityContextHolder.getContext()
+                            .setAuthentication(authentication);
+                }
             }
+        } catch (JwtException | IllegalArgumentException | UsernameNotFoundException ex) {
+            // Expired, malformed or stale token: continue as an anonymous request.
+            // Public endpoints keep working; protected ones answer 401 via the entry point.
+            SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);

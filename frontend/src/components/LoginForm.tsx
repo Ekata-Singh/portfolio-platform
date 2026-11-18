@@ -5,9 +5,10 @@ import '../pages/Login.css';
 
 interface LoginFormProps {
   onSuccess?: () => void;
+  notice?: string;
 }
 
-export function LoginForm({ onSuccess }: LoginFormProps) {
+export function LoginForm({ onSuccess, notice }: LoginFormProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -26,6 +27,8 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.status === 401) {
         setError('Invalid username or password');
+      } else if (axios.isAxiosError(err) && !err.response) {
+        setError('Cannot reach the server. It may be waking up — please try again in a moment.');
       } else {
         setError('Something went wrong. Please try again.');
       }
@@ -38,6 +41,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     <form onSubmit={handleSubmit} className="login-form">
       <h1>Admin Login</h1>
 
+      {notice && !error && <p className="login-notice">{notice}</p>}
       {error && <p className="login-error">{error}</p>}
 
       <label htmlFor="username">Username</label>
@@ -45,6 +49,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         id="username"
         type="text"
         value={username}
+        autoComplete="username"
         onChange={(event) => setUsername(event.target.value)}
         required
       />
@@ -54,6 +59,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         id="password"
         type="password"
         value={password}
+        autoComplete="current-password"
         onChange={(event) => setPassword(event.target.value)}
         required
       />

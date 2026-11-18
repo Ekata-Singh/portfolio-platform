@@ -10,6 +10,7 @@ const beforeBlogs = [
   { to: '/#about', label: 'About' },
   { to: '/#education', label: 'Education' },
   { to: '/#experience', label: 'Experience' },
+  { to: '/#skills', label: 'Skills' },
   { to: '/#projects', label: 'Projects' },
 ];
 
@@ -17,6 +18,7 @@ const afterBlogs = [
   { to: '/#achievements', label: 'Achievements' },
   { to: '/#publications', label: 'Publications' },
   { to: '/#certificates', label: 'Certificates' },
+  { to: '/#contact', label: 'Contact' },
 ];
 
 export function Navbar() {
