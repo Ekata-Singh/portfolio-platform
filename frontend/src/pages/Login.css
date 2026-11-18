@@ -1,9 +1,11 @@
 .login-page {
   display: flex;
+  flex-direction: column;
+  gap: 20px;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: url('../assets/bg-emerald-marble.png') center / cover no-repeat,
+  background: url('../assets/bg-emerald-marble.webp') center / cover no-repeat,
     var(--color-emerald-950);
   padding: 24px;
 }
@@ -85,4 +87,23 @@
   .login-form {
     padding: 2rem 1.5rem;
   }
+}
+
+.login-notice {
+  margin: 0;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.85rem;
+  color: var(--color-ink);
+  background: var(--color-gold-soft);
+  border-radius: 6px;
+}
+
+.login-back-link {
+  color: var(--color-gold-light);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.login-back-link:hover {
+  text-decoration: underline;
 }

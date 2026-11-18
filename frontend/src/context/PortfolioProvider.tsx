@@ -15,15 +15,45 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
       setError(null);
     } catch {
       setError('Failed to load portfolio data. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   }, []);
 
-  useEffect(() => {
-    fetchPortfolio().finally(() => setLoading(false));
+  const retry = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    await fetchPortfolio();
   }, [fetchPortfolio]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    getPortfolio()
+      .then((result) => {
+        if (!cancelled) {
+          setData(result);
+          setError(null);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setError('Failed to load portfolio data. Please try again later.');
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
-    <PortfolioContext.Provider value={{ data, loading, error, refetch: fetchPortfolio }}>
+    <PortfolioContext.Provider value={{ data, loading, error, refetch: fetchPortfolio, retry }}>
       {children}
     </PortfolioContext.Provider>
   );

@@ -13,6 +13,9 @@ import com.ektasingh.portfolio.project.service.ProjectService;
 import com.ektasingh.portfolio.publication.service.PublicationService;
 import com.ektasingh.portfolio.skill.service.SkillService;
 import com.ektasingh.portfolio.technology.service.TechnologyService;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -106,10 +109,21 @@ public class PortfolioServiceImpl implements PortfolioService {
                 achievementService.getAllAchievements()
         );
 
+        // Draft (unpublished) posts are only visible to a logged-in admin.
+        boolean isAdmin = isAuthenticatedUser();
         response.setBlogs(
-                blogService.getAllBlogs()
+                blogService.getAllBlogs().stream()
+                        .filter(blog -> isAdmin || Boolean.TRUE.equals(blog.getPublished()))
+                        .toList()
         );
 
         return response;
+    }
+
+    private static boolean isAuthenticatedUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth != null
+                && auth.isAuthenticated()
+                && !(auth instanceof AnonymousAuthenticationToken);
     }
 }

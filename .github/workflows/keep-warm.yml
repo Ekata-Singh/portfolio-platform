@@ -1,0 +1,19 @@
+# Optional: free Render services sleep after ~15 minutes idle, making the next
+# visit take ~1 minute. This pings the API every 10 minutes to keep it awake.
+# Enable it by adding a repository variable BACKEND_URL
+# (Settings → Secrets and variables → Actions → Variables), e.g.
+# https://portfolio-api.onrender.com
+name: Keep API warm
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    if: ${{ vars.BACKEND_URL != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping health endpoint
+        run: curl -fsS --max-time 90 --retry 2 "${{ vars.BACKEND_URL }}/actuator/health"

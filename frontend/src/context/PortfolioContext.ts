@@ -6,6 +6,7 @@ export interface PortfolioContextType {
   loading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
+  retry: () => Promise<void>;
 }
 
 export const PortfolioContext = createContext<PortfolioContextType | undefined>(
